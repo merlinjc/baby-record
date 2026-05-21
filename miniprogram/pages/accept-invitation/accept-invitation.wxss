@@ -1,0 +1,3 @@
+.hero-card--accept {
+  background: linear-gradient(145deg, #fff9ef, #f2e6d8 58%, #ead0ba 100%);
+}

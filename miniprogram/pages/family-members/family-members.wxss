@@ -1,0 +1,36 @@
+.hero-card--family {
+  background: linear-gradient(145deg, #fff8ed, #f5ebdf 56%, #ead6bf 100%);
+}
+
+.family-card {
+  background: linear-gradient(180deg, #fffdf9, #fff5e8);
+}
+
+.member-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.member-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  padding: 20rpx 24rpx;
+  border-radius: 18rpx;
+  background: #fffaf3;
+}
+
+.member-item__main {
+  flex: 1;
+}
+
+.member-item__title {
+  font-size: 28rpx;
+  font-weight: 700;
+}
+
+.member-item__button {
+  min-width: 160rpx;
+}

@@ -1,0 +1,83 @@
+<view class="page">
+  <view class="hero-card hero-card--family">
+    <view class="hero-topline">
+      <view class="chip">家庭成员</view>
+      <view class="hero-accent">FAMILY</view>
+    </view>
+    <view class="page-title mt-24">一起记录宝宝成长</view>
+    <view class="page-subtitle mt-16">创建者和管理员可以邀请家人加入，并控制成员角色。</view>
+  </view>
+
+  <block wx:if="{{isLoading}}">
+    <view class="section-card mt-24 status-card">
+      <view class="loading-dots">
+        <view class="loading-dots__item"></view>
+        <view class="loading-dots__item"></view>
+        <view class="loading-dots__item"></view>
+      </view>
+      <view class="status-card__title">正在整理家庭成员</view>
+      <view class="status-card__desc">读取当前档案下的成员信息。</view>
+    </view>
+  </block>
+
+  <block wx:elif="{{loadError}}">
+    <view class="section-card mt-24 status-card">
+      <view class="status-card__title">家庭成员页暂时不可用</view>
+      <view class="status-card__desc">{{loadError}}</view>
+      <view class="status-card__actions">
+        <button class="btn-secondary" bindtap="retryLoad">重新加载</button>
+      </view>
+    </view>
+  </block>
+
+  <block wx:elif="{{!currentBaby}}">
+    <view class="section-card mt-24 empty-state onboarding-card">
+      <view class="empty-state__title">先创建一个宝宝档案</view>
+      <view class="empty-state__desc">家庭成员邀请依赖当前档案，建档后再邀请家人加入。</view>
+    </view>
+  </block>
+
+  <block wx:else>
+    <view class="section-card mt-24 family-card">
+      <view class="section-header">
+        <view>
+          <view class="section-title">成员列表</view>
+          <view class="section-caption mt-16">{{members.length}} 位成员可访问当前档案</view>
+        </view>
+        <view class="chip">{{currentBaby.name}}</view>
+      </view>
+      <view class="member-list mt-24">
+        <view class="member-item" wx:for="{{members}}" wx:key="userId">
+          <view class="member-item__main">
+            <view class="member-item__title">{{item.relationship || item.userId}}</view>
+            <view class="section-caption mt-16">角色：{{item.role}} {{item.isSelf ? '· 我自己' : ''}}</view>
+          </view>
+          <button wx:if="{{item.canRemove}}" class="btn-danger member-item__button" data-user-id="{{item.userId}}" bindtap="removeMember">移除</button>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{canManage}}" class="section-card mt-24 family-card">
+      <view class="section-header">
+        <view>
+          <view class="section-title">邀请新成员</view>
+          <view class="section-caption mt-16">先生成邀请，再通过微信转发</view>
+        </view>
+        <view class="chip">Invite</view>
+      </view>
+      <view class="field-group mt-24 mb-24">
+        <text class="field-label">默认角色</text>
+        <picker mode="selector" range="{{roleOptions}}" range-key="label" value="{{roleValue}}" bindchange="onRoleChange">
+          <view class="picker-field">{{roleOptions[roleValue].label}}</view>
+        </picker>
+      </view>
+      <view class="field-group mb-24">
+        <text class="field-label">关系备注</text>
+        <input class="text-input" placeholder="例如：爷爷、奶奶、姨妈" maxlength="20" value="{{relationship}}" bindinput="onRelationshipInput" />
+      </view>
+      <button class="btn-primary" bindtap="createInvite">生成邀请链接</button>
+      <button wx:if="{{latestInvite}}" class="btn-secondary mt-24" open-type="share">微信转发邀请</button>
+      <view wx:if="{{latestInvite}}" class="section-caption mt-16">最近邀请已复制到剪贴板，也可以直接点击微信转发。</view>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,73 @@
+.hero-card--baby-profile {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, #fff8ed, #f5ebdf 56%, #ead6bf 100%);
+}
+
+.hero-backdrop--baby {
+  position: absolute;
+  top: -32rpx;
+  right: -10rpx;
+  width: 210rpx;
+  height: 210rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0));
+}
+
+.archive-note-card {
+  background: linear-gradient(180deg, #fffdf9, #fff5e8);
+}
+
+.baby-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.baby-card {
+  background: linear-gradient(180deg, #fffdf9, #fff3e5);
+  padding: 28rpx;
+}
+
+.baby-card__meta {
+  flex: 1;
+}
+
+.baby-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.baby-card__name {
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.baby-card__detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.baby-card__tag {
+  padding: 12rpx 18rpx;
+  border-radius: 999rpx;
+  background: #f8ead7;
+  color: #8b4513;
+  font-size: 22rpx;
+}
+
+.baby-card__tag--soft {
+  background: #fff8ee;
+  color: #9d7d67;
+}
+
+.baby-card__button {
+  width: 100%;
+}
+
+.baby-card__button--disabled {
+  opacity: 0.9;
+}

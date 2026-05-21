@@ -1,0 +1,125 @@
+.hero-card--timeline {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, #fff9ef, #f3eadf 58%, #ead3b4 100%);
+}
+
+.hero-backdrop--soft {
+  position: absolute;
+  top: -48rpx;
+  right: -28rpx;
+  width: 220rpx;
+  height: 220rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0));
+}
+
+.timeline-filter {
+  padding: 24rpx 28rpx;
+  border-radius: 24rpx;
+  background: linear-gradient(180deg, #fffdf9, #fff4e6);
+  box-shadow: 0 8rpx 24rpx rgba(139, 69, 19, 0.08);
+}
+
+.timeline-filter__label {
+  font-size: 24rpx;
+  color: #8d6e63;
+}
+
+.timeline-filter__tabs {
+  display: flex;
+  gap: 16rpx;
+}
+
+.timeline-filter__tab {
+  flex: 1;
+  text-align: center;
+  padding: 18rpx 12rpx;
+  border-radius: 999rpx;
+  background: #fff8ee;
+  color: #8b5e34;
+  font-size: 24rpx;
+}
+
+.timeline-filter__tab--active {
+  background: linear-gradient(135deg, #8b4513, #d2691e);
+  color: #ffffff;
+}
+
+.timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.timeline-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #fffdf9, #fff4e6);
+  border-radius: 24rpx;
+  padding: 24rpx;
+  box-shadow: 0 8rpx 24rpx rgba(139, 69, 19, 0.08);
+}
+
+.timeline-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 0 24rpx 0 120rpx;
+  background: rgba(255, 248, 237, 0.9);
+}
+
+.timeline-card__meta {
+  flex: 1;
+}
+
+.timeline-card__header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.timeline-card__title {
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.timeline-card__cover {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 18rpx;
+  box-shadow: 0 8rpx 20rpx rgba(139, 69, 19, 0.12);
+}
+
+.timeline-card__strip {
+  margin-top: 24rpx;
+  white-space: nowrap;
+}
+
+.timeline-strip__inner {
+  display: inline-flex;
+  gap: 16rpx;
+}
+
+.timeline-photo {
+  width: 180rpx;
+}
+
+.timeline-photo__image {
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 18rpx;
+  background: #f5e3cb;
+}
+
+.timeline-photo__label {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: #8d6e63;
+}

@@ -1,0 +1,70 @@
+<view class="page">
+  <view class="hero-card hero-card--baby-profile">
+    <view class="hero-backdrop hero-backdrop--baby"></view>
+    <view class="hero-topline">
+      <view class="chip">宝宝档案</view>
+      <view class="hero-accent">PROFILE</view>
+    </view>
+    <view class="page-title mt-24">统一管理档案</view>
+    <view class="page-subtitle mt-16">v0.1 默认单宝宝记录，但这里保留后续多宝宝切换入口，当前档案会决定上传和时间轴的归属。</view>
+  </view>
+
+  <block wx:if="{{isLoading}}">
+    <view class="section-card mt-24 status-card">
+      <view class="loading-dots">
+        <view class="loading-dots__item"></view>
+        <view class="loading-dots__item"></view>
+        <view class="loading-dots__item"></view>
+      </view>
+      <view class="status-card__title">正在读取宝宝档案</view>
+      <view class="status-card__desc">正在加载当前用户可访问的宝宝列表。</view>
+    </view>
+  </block>
+
+  <block wx:elif="{{loadError}}">
+    <view class="section-card mt-24 status-card">
+      <view class="status-card__title">档案页暂时不可用</view>
+      <view class="status-card__desc">{{loadError}}</view>
+      <view class="status-card__actions">
+        <button class="btn-secondary" bindtap="retryLoad">重新加载</button>
+      </view>
+    </view>
+  </block>
+
+  <block wx:elif="{{babies.length}}">
+    <view class="section-card mt-24 archive-note-card">
+      <view class="section-header">
+        <view>
+          <view class="section-title">当前规则</view>
+          <view class="section-caption mt-16">上传和时间轴都使用当前档案作为写入目标</view>
+        </view>
+        <view class="chip">{{babies.length}} 个档案</view>
+      </view>
+    </view>
+
+    <view class="baby-list mt-24">
+      <view class="baby-card" wx:for="{{babies}}" wx:key="_id">
+        <view class="baby-card__header">
+          <view class="baby-card__meta">
+            <view class="baby-card__name">{{item.name}}</view>
+            <view class="text-muted mt-16">{{item.birthday}} · {{item.ageLabel}}</view>
+          </view>
+          <view class="chip baby-card__status">{{item.isCurrent ? '当前档案' : '可切换'}}</view>
+        </view>
+        <view class="baby-card__detail mt-24">
+          <view class="baby-card__tag">{{item.gender === 'male' ? '男宝宝' : item.gender === 'female' ? '女宝宝' : '未设置性别'}}</view>
+          <view class="baby-card__tag baby-card__tag--soft">生日用于年龄和时间轴阶段计算</view>
+        </view>
+        <button class="{{item.isCurrent ? 'btn-secondary baby-card__button baby-card__button--disabled' : 'btn-primary baby-card__button'}} mt-24" data-id="{{item._id}}" data-current="{{item.isCurrent}}" disabled="{{item.isCurrent}}" bindtap="selectBaby">{{item.isCurrent ? '当前使用中' : '设为当前档案'}}</button>
+      </view>
+    </view>
+  </block>
+  <block wx:else>
+    <view class="section-card mt-24 empty-state onboarding-card">
+      <view class="empty-state__title">还没有档案</view>
+      <view class="empty-state__desc">创建后可直接从首页开始上传照片，并进入按月份回看的时间轴。</view>
+    </view>
+  </block>
+
+  <button wx:if="{{!isLoading && !loadError}}" class="btn-primary mt-32" bindtap="createBaby">新建宝宝档案</button>
+</view>

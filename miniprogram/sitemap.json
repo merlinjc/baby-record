@@ -1,0 +1,4 @@
+{
+  "desc": "成长日记小程序站点配置",
+  "rules": [{ "action": "allow", "page": "*" }]
+}

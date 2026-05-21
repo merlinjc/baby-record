@@ -1,0 +1,99 @@
+.hero-card--browse {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, #fff8ee, #f4eadf 56%, #eed6b8 100%);
+}
+
+.hero-backdrop--browse {
+  position: absolute;
+  top: -36rpx;
+  right: -18rpx;
+  width: 228rpx;
+  height: 228rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
+}
+
+.browse-note-card,
+.onboarding-card {
+  background: linear-gradient(180deg, #fffdf9, #fff5e8);
+}
+
+.location-filter-scroll {
+  white-space: nowrap;
+}
+
+.location-filter-row {
+  display: inline-flex;
+  gap: 16rpx;
+  padding-right: 8rpx;
+}
+
+.location-chip {
+  padding: 16rpx 24rpx;
+  border-radius: 999rpx;
+  background: #fff8ee;
+  color: #8b5e34;
+  font-size: 24rpx;
+  line-height: 1;
+  border: 2rpx solid rgba(210, 141, 71, 0.12);
+}
+
+.location-chip--active {
+  background: linear-gradient(135deg, #8b4513, #d2691e);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+.waterfall-grid {
+  display: flex;
+  align-items: flex-start;
+  gap: 20rpx;
+}
+
+.waterfall-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.photo-card {
+  background: linear-gradient(180deg, #ffffff, #fffaf3);
+  box-shadow: 0 10rpx 24rpx rgba(139, 69, 19, 0.08);
+  overflow: hidden;
+  border-radius: 24rpx;
+}
+
+.photo-card__image {
+  width: 100%;
+  display: block;
+  background: #f3e5d0;
+}
+
+.photo-card__body {
+  padding: 18rpx 20rpx 22rpx;
+}
+
+.photo-card__date {
+  font-size: 22rpx;
+  color: #8d6e63;
+}
+
+.photo-card__desc {
+  margin-top: 10rpx;
+  font-size: 26rpx;
+  line-height: 1.5;
+  color: #3e2723;
+}
+
+.photo-card__hint {
+  margin-top: 14rpx;
+  font-size: 20rpx;
+  color: #b0835f;
+}
+
+.status-card--compact {
+  padding-top: 28rpx;
+  padding-bottom: 28rpx;
+}

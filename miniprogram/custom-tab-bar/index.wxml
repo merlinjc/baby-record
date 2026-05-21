@@ -1,0 +1,15 @@
+<view class="tabbar-shell safe-bottom">
+  <view class="tabbar-frame">
+    <view
+      wx:for="{{list}}"
+      wx:key="pagePath"
+      class="tabbar-item {{selected === index ? 'tabbar-item--active' : ''}}"
+      data-path="{{item.pagePath}}"
+      data-index="{{index}}"
+      bindtap="switchTab"
+    >
+      <view class="tabbar-item__label">{{item.text}}</view>
+      <view wx:if="{{selected === index}}" class="tabbar-item__indicator"></view>
+    </view>
+  </view>
+</view>

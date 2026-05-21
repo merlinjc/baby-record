@@ -1,0 +1,23 @@
+<view class="page">
+  <view class="hero-card hero-card--feedback">
+    <view class="hero-topline">
+      <view class="chip">意见反馈</view>
+      <view class="hero-accent">FEEDBACK</view>
+    </view>
+    <view class="page-title mt-24">告诉我们哪里还不够好</view>
+    <view class="page-subtitle mt-16">可以提交功能建议、异常问题或体验上的意见。</view>
+  </view>
+
+  <view class="form-card mt-24 feedback-card">
+    <view class="field-group mb-32">
+      <text class="field-label">反馈内容</text>
+      <textarea class="text-area" maxlength="300" placeholder="例如：希望时间轴支持更快定位到某一天" value="{{content}}" bindinput="onContentInput"></textarea>
+    </view>
+    <view class="field-group">
+      <text class="field-label">联系方式（可选）</text>
+      <input class="text-input" maxlength="40" placeholder="微信号 / 手机号 / 邮箱" value="{{contact}}" bindinput="onContactInput" />
+    </view>
+  </view>
+
+  <button class="btn-primary mt-32" loading="{{submitting}}" bindtap="submitFeedback">提交反馈</button>
+</view>

@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/baby-profile/baby-profile",
+    "pages/baby-edit/baby-edit",
+    "pages/photo-upload/photo-upload",
+    "pages/photo-browse/photo-browse",
+    "pages/photo-detail/photo-detail",
+    "pages/photo-time/photo-time",
+    "pages/family-members/family-members",
+    "pages/accept-invitation/accept-invitation",
+    "pages/recycle-bin/recycle-bin",
+    "pages/feedback/feedback",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#FFF8DC",
+    "navigationBarTitleText": "成长日记",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#FFF8DC",
+    "backgroundTextStyle": "light"
+  },
+  "tabBar": {
+    "custom": true,
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/photo-time/photo-time",
+        "text": "时间轴"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

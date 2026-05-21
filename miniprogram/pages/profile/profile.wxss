@@ -1,0 +1,53 @@
+.hero-card--profile {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, #fff9ef, #f2e6d8 58%, #ead0ba 100%);
+}
+
+.hero-backdrop--profile {
+  position: absolute;
+  top: -36rpx;
+  right: -12rpx;
+  width: 220rpx;
+  height: 220rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0));
+}
+
+.panel-card {
+  background: linear-gradient(180deg, #fffdf9, #fff5e8);
+}
+
+.profile-highlight {
+  padding: 24rpx;
+  border-radius: 20rpx;
+  background: #fffaf3;
+  color: #6d4c41;
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
+.quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.quick-actions__item {
+  flex: 1;
+  min-width: 200rpx;
+}
+
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.todo-item {
+  padding: 20rpx 24rpx;
+  border-radius: 18rpx;
+  background: #fffaf3;
+  color: #6d4c41;
+  line-height: 1.6;
+}

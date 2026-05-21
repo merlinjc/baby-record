@@ -1,0 +1,7 @@
+.hero-card--feedback {
+  background: linear-gradient(145deg, #fff8ed, #f4eadc 55%, #ecd2ba 100%);
+}
+
+.feedback-card {
+  background: linear-gradient(180deg, #fffdf9, #fff3e4);
+}

@@ -1,0 +1,90 @@
+<view class="page">
+  <view class="hero-card hero-card--profile">
+    <view class="hero-backdrop hero-backdrop--profile"></view>
+    <view class="hero-topline">
+      <view class="chip">CloudBase MVP</view>
+      <view class="hero-accent">PROFILE</view>
+    </view>
+    <view class="page-title mt-24">{{userInfo ? userInfo.nickName : '成长记录者'}}</view>
+    <view class="page-subtitle mt-16">当前阶段已经接入档案、照片、家庭成员、回收站和反馈链路，后续再做整体 UI 重构。</view>
+  </view>
+
+  <block wx:if="{{isLoading}}">
+    <view class="section-card mt-24 status-card">
+      <view class="loading-dots">
+        <view class="loading-dots__item"></view>
+        <view class="loading-dots__item"></view>
+        <view class="loading-dots__item"></view>
+      </view>
+      <view class="status-card__title">正在整理个人页数据</view>
+      <view class="status-card__desc">正在读取当前用户、宝宝档案和照片统计。</view>
+    </view>
+  </block>
+
+  <block wx:elif="{{loadError}}">
+    <view class="section-card mt-24 status-card">
+      <view class="status-card__title">个人页暂时不可用</view>
+      <view class="status-card__desc">{{loadError}}</view>
+      <view class="status-card__actions">
+        <button class="btn-secondary" bindtap="retryLoad">重新加载</button>
+      </view>
+    </view>
+  </block>
+
+  <block wx:else>
+    <view class="summary-card mt-24 panel-card">
+      <view class="section-header">
+        <view>
+          <view class="section-title">记录概览</view>
+          <view class="section-caption mt-16">这里的照片统计以当前档案为准</view>
+        </view>
+        <view class="chip">统计</view>
+      </view>
+      <view class="summary-grid mt-24">
+        <view class="summary-tile">
+          <view class="summary-value">{{stats.babies}}</view>
+          <view class="summary-label">宝宝档案</view>
+        </view>
+        <view class="summary-tile">
+          <view class="summary-value">{{stats.photos}}</view>
+          <view class="summary-label">当前档案照片</view>
+        </view>
+        <view class="summary-tile">
+          <view class="summary-value">{{stats.timelineMonths}}</view>
+          <view class="summary-label">时间轴月份</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-card mt-24 panel-card">
+      <view class="section-header">
+        <view>
+          <view class="section-title">当前档案</view>
+          <view class="section-caption mt-16">快速进入档案、上传和时间轴管理</view>
+        </view>
+        <view class="chip">入口</view>
+      </view>
+      <view class="profile-highlight mt-24">{{currentBaby ? currentBaby.name + ' · ' + currentBaby.birthday : '尚未创建宝宝档案'}}</view>
+      <view class="quick-actions mt-24">
+        <button class="btn-secondary quick-actions__item" bindtap="goBabyProfiles">管理档案</button>
+        <button class="btn-secondary quick-actions__item" bindtap="goTimeline">查看时间轴</button>
+        <button class="btn-secondary quick-actions__item" bindtap="goUpload">继续上传</button>
+      </view>
+    </view>
+
+    <view class="section-card mt-24 panel-card">
+      <view class="section-header">
+        <view>
+          <view class="section-title">协作与工具</view>
+          <view class="section-caption mt-16">围绕家庭协作和误删恢复的补充能力</view>
+        </view>
+        <view class="chip">Tools</view>
+      </view>
+      <view class="quick-actions mt-24">
+        <button class="btn-secondary quick-actions__item" bindtap="goFamilyMembers">家庭成员</button>
+        <button class="btn-secondary quick-actions__item" bindtap="goRecycleBin">回收站</button>
+        <button class="btn-secondary quick-actions__item" bindtap="goFeedback">意见反馈</button>
+      </view>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,45 @@
+.hero-card--detail {
+  background: linear-gradient(180deg, #fffdf8, #fff3e4);
+}
+
+.detail-topline {
+  align-items: flex-start;
+}
+
+.detail-image {
+  width: 100%;
+  border-radius: 20rpx;
+  display: block;
+  background: #f4e8d5;
+  box-shadow: 0 12rpx 28rpx rgba(139, 69, 19, 0.14);
+}
+
+.detail-panel {
+  padding: 24rpx;
+  border-radius: 20rpx;
+  background: #fffaf3;
+}
+
+.detail-date {
+  font-size: 24rpx;
+  color: #8d6e63;
+}
+
+.detail-desc {
+  font-size: 30rpx;
+  line-height: 1.6;
+}
+
+.detail-meta {
+  color: #8d6e63;
+  line-height: 1.6;
+}
+
+.detail-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.detail-actions__item {
+  flex: 1;
+}

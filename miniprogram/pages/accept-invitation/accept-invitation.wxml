@@ -1,0 +1,20 @@
+<view class="page">
+  <view class="hero-card hero-card--accept">
+    <view class="hero-topline">
+      <view class="chip">邀请加入</view>
+      <view class="hero-accent">JOIN</view>
+    </view>
+    <view class="page-title mt-24">加入宝宝成长记录</view>
+    <view class="page-subtitle mt-16">接受后，你将获得当前宝宝档案的访问权限。</view>
+  </view>
+
+  <view class="section-card mt-24 status-card">
+    <view wx:if="{{accepted}}" class="status-card__title">已成功加入</view>
+    <view wx:else class="status-card__title">准备接受邀请</view>
+    <view class="status-card__desc mt-16">{{accepted ? '现在可以返回首页查看宝宝的照片和时间轴。' : '点击下方按钮即可接受邀请。'}}</view>
+    <view class="status-card__actions">
+      <button wx:if="{{!accepted}}" class="btn-primary" loading="{{accepting}}" bindtap="acceptInvite">接受邀请</button>
+      <button wx:if="{{accepted}}" class="btn-secondary" bindtap="goHome">返回首页</button>
+    </view>
+  </view>
+</view>

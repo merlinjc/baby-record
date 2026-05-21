@@ -1,0 +1,109 @@
+<view class="page">
+  <view class="hero-card hero-card--home">
+    <view class="hero-backdrop"></view>
+    <view class="hero-topline">
+      <view class="chip">MVP v0.1 · 单用户记录</view>
+      <view class="hero-accent">成长归档</view>
+    </view>
+    <view class="page-title mt-24">把宝宝的重要瞬间，留在一条温暖的时间线里</view>
+    <view class="page-subtitle mt-16">先完成档案创建、照片上传、按时间回看这条最短闭环。</view>
+    <view class="hero-actions mt-32">
+      <button class="btn-primary hero-action hero-action--primary" bindtap="goUpload">上传照片</button>
+      <button class="btn-secondary hero-action" bindtap="goTimeline">时间轴</button>
+    </view>
+  </view>
+
+  <block wx:if="{{isLoading}}">
+    <view class="section-card mt-24 status-card">
+      <view class="loading-dots">
+        <view class="loading-dots__item"></view>
+        <view class="loading-dots__item"></view>
+        <view class="loading-dots__item"></view>
+      </view>
+      <view class="status-card__title">正在整理成长记录</view>
+      <view class="status-card__desc">正在获取宝宝档案和最新照片。</view>
+    </view>
+  </block>
+
+  <block wx:elif="{{loadError}}">
+    <view class="section-card mt-24 status-card">
+      <view class="status-card__title">暂时没能打开首页</view>
+      <view class="status-card__desc">{{loadError}}</view>
+      <view class="status-card__actions">
+        <button class="btn-secondary" bindtap="retryLoad">重新加载</button>
+      </view>
+    </view>
+  </block>
+
+  <block wx:elif="{{hasBaby}}">
+    <view class="section-card mt-24 dashboard-card">
+      <view class="section-title">当前宝宝</view>
+      <view class="baby-overview mt-24">
+        <view class="baby-overview__main">
+          <view class="baby-overview__name">{{currentBaby.name}}</view>
+          <view class="text-muted mt-16">{{ageLabel}} · {{currentBaby.birthday}}</view>
+        </view>
+        <view class="baby-overview__badge">当前档案</view>
+      </view>
+      <view class="summary-grid mt-24">
+        <view class="summary-tile">
+          <view class="summary-value">{{photoCount}}</view>
+          <view class="summary-label">累计照片</view>
+        </view>
+        <view class="summary-tile">
+          <view class="summary-value">{{latestDateLabel || '--'}}</view>
+          <view class="summary-label">最近记录</view>
+        </view>
+        <view class="summary-tile">
+          <view class="summary-value">{{monthCount || 0}}</view>
+          <view class="summary-label">归档月份</view>
+        </view>
+      </view>
+      <view wx:if="{{photoCount}}" class="status-inline">最近一次上传后，可直接进入时间轴按月份回看</view>
+      <view class="inline-actions mt-24">
+        <button class="btn-secondary" bindtap="goBabyProfiles">切换档案</button>
+        <button class="btn-secondary" bindtap="goProfile">进入我的</button>
+      </view>
+    </view>
+
+    <view class="section-card mt-24 feed-card">
+      <view class="section-header">
+        <view>
+          <view class="section-title">照片浏览</view>
+          <view class="section-caption mt-16">首页展示最新 6 张，进入照片流可继续按分页浏览</view>
+        </view>
+        <view class="chip">{{photoCount}} 张</view>
+      </view>
+      <block wx:if="{{photos.length}}">
+        <view class="waterfall-grid mt-24">
+          <view class="waterfall-column" wx:for="{{waterfallColumns}}" wx:key="*this">
+            <view class="photo-card" wx:for="{{item}}" wx:key="_id" data-id="{{item._id}}" bindtap="openPhotoDetail">
+              <image class="photo-card__image" style="{{item.imageStyle}}" src="{{item.filePath}}" mode="aspectFill" lazy-load="{{true}}"></image>
+              <view class="photo-card__body">
+                <view class="photo-card__date">{{item.photoDate}}</view>
+                <view class="photo-card__desc">{{item.description || '未添加描述'}}</view>
+                <view class="photo-card__hint">点击查看详情</view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <button class="btn-secondary mt-24" bindtap="goPhotoBrowse">进入照片流</button>
+      </block>
+      <block wx:else>
+        <view class="empty-state">
+          <view class="empty-state__title">还没有照片</view>
+          <view class="empty-state__desc">先上传第一批成长照片，首页会按时间倒序展示。</view>
+          <button class="btn-primary" bindtap="goUpload">上传第一张</button>
+        </view>
+      </block>
+    </view>
+  </block>
+
+  <block wx:else>
+    <view class="section-card mt-24 empty-state onboarding-card">
+      <view class="empty-state__title">先创建一个宝宝档案</view>
+      <view class="empty-state__desc">MVP v0.1 仅支持单宝宝记录，创建后即可开始上传照片。</view>
+      <button class="btn-primary" bindtap="goCreateBaby">创建档案</button>
+    </view>
+  </block>
+</view>

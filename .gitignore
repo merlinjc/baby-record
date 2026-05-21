@@ -1,0 +1,14 @@
+node_modules/
+7273b54ae658b469a92b17f16759b27a/
+.DS_Store
+*.log
+
+# Build and local IDE output
+miniprogram-dist/
+dist/
+coverage/
+
+# Local env and generated state
+.env
+.env.*
+
