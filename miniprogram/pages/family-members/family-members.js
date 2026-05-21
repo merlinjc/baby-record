@@ -8,17 +8,25 @@ const ROLE_OPTIONS = [
   { value: 'viewer', label: '仅查看者' }
 ]
 
+function buildMemberCaption(memberCount, roleLabel) {
+  return memberCount + ' 位成员可访问当前档案，你当前是' + (roleLabel || '未加入') + '角色'
+}
+
 Page({
   data: {
     isLoading: true,
     loadError: '',
     currentBaby: null,
     members: [],
+    currentRole: '',
+    currentRoleLabel: '',
     canManage: false,
     roleOptions: ROLE_OPTIONS,
     roleValue: 0,
     relationship: '',
-    latestInvite: null
+    latestInvite: null,
+    shareTip: '',
+    memberCaption: ''
   },
 
   async onShow() {
@@ -38,7 +46,16 @@ Page({
       this.setData({
         currentBaby,
         members: familyInfo ? familyInfo.members : [],
+        currentRole: familyInfo ? familyInfo.currentRole : '',
+        currentRoleLabel: familyInfo ? familyInfo.currentRoleLabel : '',
         canManage: familyInfo ? familyInfo.canManage : false,
+        memberCaption: buildMemberCaption(
+          familyInfo ? familyInfo.members.length : 0,
+          familyInfo ? familyInfo.currentRoleLabel : ''
+        ),
+        shareTip: familyInfo && familyInfo.canManage
+          ? '仅创建者和管理员可以发起分享与管理成员。邀请码为一次性使用，避免转发后被反复加入。'
+          : '当前角色仅可查看成员列表，不能发起分享或移除成员。',
         isLoading: false
       })
     } catch (error) {
@@ -64,6 +81,11 @@ Page({
       return
     }
 
+    if (!this.data.canManage) {
+      errorUtil.showError('仅创建者和管理员可以分享')
+      return
+    }
+
     try {
       const invite = await familyService.inviteMember({
         babyId: this.data.currentBaby._id,
@@ -75,7 +97,7 @@ Page({
       wx.setClipboardData({
         data: invite.sharePath
       })
-      errorUtil.showSuccess('邀请链接已复制')
+      errorUtil.showSuccess('一次性邀请码链接已复制')
     } catch (error) {
       errorUtil.showError(error.message || '创建邀请失败')
     }
@@ -83,6 +105,11 @@ Page({
 
   async removeMember(event) {
     const { userId } = event.currentTarget.dataset
+
+    if (!this.data.canManage) {
+      errorUtil.showError('仅创建者和管理员可以管理成员')
+      return
+    }
 
     try {
       await familyService.removeMember({
@@ -101,6 +128,13 @@ Page({
   },
 
   onShareAppMessage() {
+    if (!this.data.canManage) {
+      return {
+        title: '宝宝成长记录',
+        path: '/pages/profile/profile'
+      }
+    }
+
     if (!this.data.latestInvite) {
       return {
         title: '邀请你加入宝宝成长记录',

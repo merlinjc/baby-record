@@ -1,0 +1,31 @@
+.hero-card--profile-edit {
+  background: linear-gradient(145deg, #fff5ea, #f2e0cd 60%, #dfbd9b 100%);
+}
+
+.avatar-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.avatar-option {
+  width: 136rpx;
+  height: 136rpx;
+  padding: 8rpx;
+  border-radius: 28rpx;
+  background: rgba(255, 250, 243, 0.98);
+  border: 2rpx solid rgba(232, 209, 184, 0.5);
+  box-sizing: border-box;
+}
+
+.avatar-option--active {
+  border-color: #d98233;
+  box-shadow: 0 14rpx 30rpx rgba(217, 130, 51, 0.18);
+}
+
+.avatar-option__image {
+  width: 100%;
+  height: 100%;
+  border-radius: 20rpx;
+  display: block;
+}

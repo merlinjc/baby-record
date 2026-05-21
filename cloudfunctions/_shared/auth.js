@@ -1,5 +1,9 @@
 const { cloud, db } = require('./db')
 
+const VALID_MEMBER_ROLES = ['creator', 'admin', 'member', 'viewer']
+const INVITABLE_MEMBER_ROLES = ['admin', 'member', 'viewer']
+const VALID_PHOTO_PERMISSIONS = ['family', 'private', 'admin']
+
 async function ensureUser() {
   const { OPENID, APPID, UNIONID } = cloud.getWXContext()
 
@@ -43,6 +47,48 @@ async function ensureUser() {
   }
 }
 
+function normalizeUserNickName(nickName) {
+  const safeNickName = String(nickName || '').trim()
+
+  if (!safeNickName) {
+    throw new Error('昵称不能为空')
+  }
+
+  if (safeNickName.length > 20) {
+    throw new Error('昵称不能超过 20 个字符')
+  }
+
+  return safeNickName
+}
+
+function normalizeUserAvatarUrl(avatarUrl) {
+  const safeAvatarUrl = String(avatarUrl || '').trim()
+
+  if (!safeAvatarUrl) {
+    return ''
+  }
+
+  if (safeAvatarUrl.length > 2048) {
+    throw new Error('头像地址过长')
+  }
+
+  if (!/^https:\/\//.test(safeAvatarUrl)) {
+    throw new Error('头像地址不合法')
+  }
+
+  return safeAvatarUrl
+}
+
+function hasCompletedUserProfile(user) {
+  return !!(user && String(user.nickName || '').trim())
+}
+
+function ensureCompletedUserProfile(user) {
+  if (!hasCompletedUserProfile(user)) {
+    throw new Error('请先完善个人资料后再进行分享')
+  }
+}
+
 function getMemberRole(baby, openid) {
   if (!baby || !openid) {
     return ''
@@ -59,6 +105,39 @@ function getMemberRole(baby, openid) {
 function canManageBaby(baby, openid) {
   const role = getMemberRole(baby, openid)
   return role === 'creator' || role === 'admin'
+}
+
+function canUploadPhoto(baby, openid) {
+  const role = getMemberRole(baby, openid)
+  return role === 'creator' || role === 'admin' || role === 'member'
+}
+
+function normalizeMemberRole(role, options = {}) {
+  const allowCreator = !!options.allowCreator
+  const defaultRole = options.defaultRole || 'member'
+  const allowedRoles = allowCreator ? VALID_MEMBER_ROLES : INVITABLE_MEMBER_ROLES
+
+  if (!role) {
+    return defaultRole
+  }
+
+  if (!allowedRoles.includes(role)) {
+    throw new Error('成员角色不合法')
+  }
+
+  return role
+}
+
+function normalizePhotoPermission(permission) {
+  if (!permission) {
+    return 'family'
+  }
+
+  if (!VALID_PHOTO_PERMISSIONS.includes(permission)) {
+    throw new Error('照片权限不合法')
+  }
+
+  return permission
 }
 
 async function verifyBabyAccess(babyId, openid) {
@@ -112,9 +191,16 @@ function canManagePhoto(photo, baby, openid) {
 
 module.exports = {
   ensureUser,
+  normalizeUserNickName,
+  normalizeUserAvatarUrl,
+  hasCompletedUserProfile,
+  ensureCompletedUserProfile,
   getMemberRole,
   canManageBaby,
+  canUploadPhoto,
   verifyBabyAccess,
   canViewPhoto,
-  canManagePhoto
+  canManagePhoto,
+  normalizeMemberRole,
+  normalizePhotoPermission
 }

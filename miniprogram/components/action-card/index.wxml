@@ -1,0 +1,9 @@
+<view class="action-card {{extraClass}} {{disabled ? 'action-card--disabled' : ''}}" bindtap="handleTap">
+  <view wx:if="{{resolvedIcon}}" class="action-card__icon-shell">
+    <image class="action-card__icon" src="{{resolvedIcon}}" mode="aspectFit"></image>
+  </view>
+  <view class="action-card__body">
+    <view wx:if="{{title}}" class="action-card__title">{{title}}</view>
+    <view wx:if="{{desc}}" class="action-card__desc">{{desc}}</view>
+  </view>
+</view>

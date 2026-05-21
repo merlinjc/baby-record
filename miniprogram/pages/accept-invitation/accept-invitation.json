@@ -1,3 +1,7 @@
 {
-  "navigationBarTitleText": "接受邀请"
+  "navigationBarTitleText": "接受邀请",
+  "usingComponents": {
+    "ui-hero": "/components/ui-hero/index",
+    "status-card": "/components/status-card/index"
+  }
 }

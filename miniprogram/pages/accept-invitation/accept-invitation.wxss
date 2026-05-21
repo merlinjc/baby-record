@@ -1,3 +1,11 @@
 .hero-card--accept {
-  background: linear-gradient(145deg, #fff9ef, #f2e6d8 58%, #ead0ba 100%);
+  background: linear-gradient(145deg, #fff8ef, #f3e2d5 58%, #e6c4a8 100%);
+}
+
+.invite-code-input {
+  text-transform: uppercase;
+  letter-spacing: 8rpx;
+  text-align: center;
+  font-size: 34rpx;
+  font-weight: 700;
 }

@@ -1,109 +1,85 @@
 <view class="page">
-  <view class="hero-card hero-card--home">
-    <view class="hero-backdrop"></view>
-    <view class="hero-topline">
-      <view class="chip">MVP v0.1 · 单用户记录</view>
-      <view class="hero-accent">成长归档</view>
-    </view>
-    <view class="page-title mt-24">把宝宝的重要瞬间，留在一条温暖的时间线里</view>
-    <view class="page-subtitle mt-16">先完成档案创建、照片上传、按时间回看这条最短闭环。</view>
+  <ui-hero
+    extra-class="hero-card--home"
+    chip="成长首页"
+    accent="HOME"
+    kicker="保留温暖、简洁、易用的设计原则，把最短记录闭环放在第一屏。"
+    title="把宝宝的重要瞬间，整理成一条可持续回看的成长线"
+    subtitle="首页聚焦当前档案、上传入口、最近记录和照片流预览，减少来回跳转。"
+  >
     <view class="hero-actions mt-32">
       <button class="btn-primary hero-action hero-action--primary" bindtap="goUpload">上传照片</button>
-      <button class="btn-secondary hero-action" bindtap="goTimeline">时间轴</button>
+      <button class="btn-secondary hero-action" bindtap="goTimeline">查看时间轴</button>
     </view>
-  </view>
+  </ui-hero>
 
   <block wx:if="{{isLoading}}">
-    <view class="section-card mt-24 status-card">
-      <view class="loading-dots">
-        <view class="loading-dots__item"></view>
-        <view class="loading-dots__item"></view>
-        <view class="loading-dots__item"></view>
-      </view>
-      <view class="status-card__title">正在整理成长记录</view>
-      <view class="status-card__desc">正在获取宝宝档案和最新照片。</view>
-    </view>
+    <status-card extra-class="mt-24" loading="{{true}}" title="正在整理成长记录" desc="正在获取宝宝档案、时间轴统计和最新照片。"></status-card>
   </block>
 
   <block wx:elif="{{loadError}}">
-    <view class="section-card mt-24 status-card">
-      <view class="status-card__title">暂时没能打开首页</view>
-      <view class="status-card__desc">{{loadError}}</view>
+    <status-card extra-class="mt-24" title="暂时没能打开首页" desc="{{loadError}}">
       <view class="status-card__actions">
         <button class="btn-secondary" bindtap="retryLoad">重新加载</button>
       </view>
-    </view>
+    </status-card>
   </block>
 
   <block wx:elif="{{hasBaby}}">
-    <view class="section-card mt-24 dashboard-card">
-      <view class="section-title">当前宝宝</view>
-      <view class="baby-overview mt-24">
+    <view class="summary-card mt-24 dashboard-card">
+      <section-header title="当前档案概览" caption="上传、浏览和时间轴都围绕当前宝宝档案展开" chip="{{currentBaby.name}}"></section-header>
+
+      <view class="baby-overview home-baby-overview mt-24">
         <view class="baby-overview__main">
           <view class="baby-overview__name">{{currentBaby.name}}</view>
           <view class="text-muted mt-16">{{ageLabel}} · {{currentBaby.birthday}}</view>
         </view>
         <view class="baby-overview__badge">当前档案</view>
       </view>
+
       <view class="summary-grid mt-24">
-        <view class="summary-tile">
-          <view class="summary-value">{{photoCount}}</view>
-          <view class="summary-label">累计照片</view>
-        </view>
-        <view class="summary-tile">
-          <view class="summary-value">{{latestDateLabel || '--'}}</view>
-          <view class="summary-label">最近记录</view>
-        </view>
-        <view class="summary-tile">
-          <view class="summary-value">{{monthCount || 0}}</view>
-          <view class="summary-label">归档月份</view>
-        </view>
+        <summary-stat value="{{photoCount}}" label="累计照片"></summary-stat>
+        <summary-stat value="{{latestDateLabel || '--'}}" label="最近记录"></summary-stat>
+        <summary-stat value="{{monthCount || 0}}" label="归档月份"></summary-stat>
       </view>
-      <view wx:if="{{photoCount}}" class="status-inline">最近一次上传后，可直接进入时间轴按月份回看</view>
-      <view class="inline-actions mt-24">
-        <button class="btn-secondary" bindtap="goBabyProfiles">切换档案</button>
-        <button class="btn-secondary" bindtap="goProfile">进入我的</button>
+
+      <view wx:if="{{photoCount}}" class="info-band mt-24">最近一次上传后，可直接进入时间轴按月份回看</view>
+
+      <view class="action-grid mt-24">
+        <action-card icon-name="baby" title="切换档案" desc="管理档案并设置当前使用中的宝宝" bind:tap="goBabyProfiles"></action-card>
+        <action-card icon-name="images" title="浏览照片流" desc="按时间倒序快速翻看最近记录" bind:tap="goPhotoBrowse"></action-card>
+        <action-card icon-name="circle-user-round" title="进入我的" desc="查看统计、家庭成员和回收站入口" bind:tap="goProfile"></action-card>
       </view>
     </view>
 
     <view class="section-card mt-24 feed-card">
-      <view class="section-header">
-        <view>
-          <view class="section-title">照片浏览</view>
-          <view class="section-caption mt-16">首页展示最新 6 张，进入照片流可继续按分页浏览</view>
-        </view>
-        <view class="chip">{{photoCount}} 张</view>
-      </view>
+      <section-header title="照片浏览预览" caption="首页仅展示最新 6 张，保证信息密度和可读性平衡" chip="{{photoCount}} 张"></section-header>
+
       <block wx:if="{{photos.length}}">
         <view class="waterfall-grid mt-24">
           <view class="waterfall-column" wx:for="{{waterfallColumns}}" wx:key="*this">
-            <view class="photo-card" wx:for="{{item}}" wx:key="_id" data-id="{{item._id}}" bindtap="openPhotoDetail">
-              <image class="photo-card__image" style="{{item.imageStyle}}" src="{{item.filePath}}" mode="aspectFill" lazy-load="{{true}}"></image>
-              <view class="photo-card__body">
-                <view class="photo-card__date">{{item.photoDate}}</view>
-                <view class="photo-card__desc">{{item.description || '未添加描述'}}</view>
-                <view class="photo-card__hint">点击查看详情</view>
-              </view>
-            </view>
+            <photo-entry-card wx:for="{{item}}" wx:key="_id" photo="{{item}}" bind:tap="openPhotoDetail"></photo-entry-card>
           </view>
         </view>
-        <button class="btn-secondary mt-24" bindtap="goPhotoBrowse">进入照片流</button>
-      </block>
-      <block wx:else>
-        <view class="empty-state">
-          <view class="empty-state__title">还没有照片</view>
-          <view class="empty-state__desc">先上传第一批成长照片，首页会按时间倒序展示。</view>
-          <button class="btn-primary" bindtap="goUpload">上传第一张</button>
+
+        <view class="inline-actions mt-24">
+          <button class="btn-secondary hero-action" bindtap="goPhotoBrowse">进入照片流</button>
+          <button class="btn-ghost hero-action" bindtap="goTimeline">按时间回看</button>
         </view>
+      </block>
+
+      <block wx:else>
+        <empty-state-panel title="还没有照片" icon-name="images" desc="先上传第一批成长照片，首页会按时间倒序展示最近记录。" extra-class="panel-plain">
+          <button class="btn-primary" bindtap="goUpload">上传第一张</button>
+        </empty-state-panel>
       </block>
     </view>
   </block>
 
   <block wx:else>
-    <view class="section-card mt-24 empty-state onboarding-card">
-      <view class="empty-state__title">先创建一个宝宝档案</view>
-      <view class="empty-state__desc">MVP v0.1 仅支持单宝宝记录，创建后即可开始上传照片。</view>
-      <button class="btn-primary" bindtap="goCreateBaby">创建档案</button>
-    </view>
+    <empty-state-panel extra-class="mt-24" icon-name="badge-plus" title="先创建一个宝宝档案" desc="当前 MVP 先服务单宝宝记录，建档后即可开始上传照片、生成时间轴和浏览照片流。">
+      <view class="status-inline">先建档，再开始记录</view>
+      <button class="btn-primary mt-24" bindtap="goCreateBaby">创建档案</button>
+    </empty-state-panel>
   </block>
 </view>

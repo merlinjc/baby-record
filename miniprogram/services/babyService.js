@@ -1,6 +1,34 @@
 const mockStore = require('../utils/mockStore')
 const cloudUtil = require('../utils/cloudUtil')
 
+function getAppInstance() {
+  return typeof getApp === 'function' ? getApp() : null
+}
+
+function syncAppUserBabyProfiles(babyId) {
+  if (!babyId) {
+    return
+  }
+
+  const app = getAppInstance()
+  const userInfo = app && app.globalData ? app.globalData.userInfo : null
+
+  if (!userInfo) {
+    return
+  }
+
+  const babyProfiles = Array.isArray(userInfo.babyProfiles) ? userInfo.babyProfiles : []
+
+  if (babyProfiles.indexOf(babyId) >= 0) {
+    return
+  }
+
+  app.globalData.userInfo = {
+    ...userInfo,
+    babyProfiles: babyProfiles.concat(babyId)
+  }
+}
+
 const CURRENT_BABY_KEY = 'baby-photo-record-current-baby-id'
 const COLLECTION_NAME = 'baby_profiles'
 
@@ -32,8 +60,18 @@ async function listBabyProfiles() {
 
   if (db) {
     try {
-      const result = await db.collection(COLLECTION_NAME).orderBy('createTime', 'desc').get()
-      return result.data || []
+      const app = getAppInstance()
+      const userInfo = app && app.globalData ? app.globalData.userInfo : null
+
+      if (userInfo && userInfo.babyProfiles && userInfo.babyProfiles.length) {
+        const result = await db.collection(COLLECTION_NAME).where({
+          _id: db.command.in(userInfo.babyProfiles)
+        }).orderBy('createTime', 'desc').get()
+
+        return result.data || []
+      }
+
+      return []
     } catch (error) {
       console.warn('listBabyProfiles fallback to local mock', error)
     }
@@ -55,6 +93,7 @@ async function createBabyProfile(payload) {
 
       if (result && result.code === 0 && result.data) {
         setCurrentBabyIdToStorage(result.data._id)
+        syncAppUserBabyProfiles(result.data._id)
         return result.data
       }
     } catch (error) {
@@ -98,6 +137,7 @@ async function createBabyProfile(payload) {
       }
 
       setCurrentBabyIdToStorage(baby._id)
+      syncAppUserBabyProfiles(baby._id)
       return baby
     } catch (error) {
       console.warn('createBabyProfile fallback to local mock', error)
@@ -134,6 +174,7 @@ async function createBabyProfile(payload) {
   })
 
   setCurrentBabyIdToStorage(baby._id)
+  syncAppUserBabyProfiles(baby._id)
   return nextDb.babies.find((item) => item._id === baby._id)
 }
 

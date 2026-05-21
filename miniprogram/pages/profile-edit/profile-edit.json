@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "完善个人资料",
+  "usingComponents": {
+    "ui-hero": "/components/ui-hero/index",
+    "section-header": "/components/section-header/index",
+    "status-card": "/components/status-card/index",
+    "summary-stat": "/components/summary-stat/index",
+    "form-field": "/components/form-field/index"
+  }
+}

@@ -1,4 +1,9 @@
 const cloud = require('wx-server-sdk')
+const {
+  normalizeUserNickName,
+  normalizeUserAvatarUrl,
+  hasCompletedUserProfile
+} = require('../_shared/auth')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
@@ -41,6 +46,18 @@ async function ensureUser() {
   }
 }
 
+function sanitizeUser(user) {
+  const nickName = user && user.nickName ? normalizeUserNickName(user.nickName) : ''
+  const avatarUrl = user && user.avatarUrl ? normalizeUserAvatarUrl(user.avatarUrl) : ''
+
+  return {
+    ...user,
+    nickName,
+    avatarUrl,
+    profileCompleted: hasCompletedUserProfile({ nickName })
+  }
+}
+
 exports.main = async () => {
   try {
     const user = await ensureUser()
@@ -48,7 +65,7 @@ exports.main = async () => {
     return {
       code: 0,
       message: '获取用户信息成功',
-      data: user
+      data: sanitizeUser(user)
     }
   } catch (error) {
     return {

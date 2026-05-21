@@ -39,14 +39,18 @@ exports.main = async (event) => {
       deleted: true
     }).orderBy('deletedTime', 'desc').get()
 
-    const photos = await attachTempFileUrls(result.data || [])
+    const manageablePhotos = (result.data || []).filter((photo) => {
+      return canManagePhoto(photo, baby, wxContext.OPENID)
+    })
+
+    const photos = await attachTempFileUrls(manageablePhotos)
 
     return {
       code: 0,
       message: '获取成功',
       data: photos.map((photo) => ({
         ...photo,
-        canRestore: canManagePhoto(photo, baby, wxContext.OPENID)
+        canRestore: true
       }))
     }
   } catch (error) {

@@ -260,6 +260,121 @@
   border: none;
 }
 
+---
+
+## 6. 图标体系
+
+### 6.1 统一来源
+
+当前小程序图标统一基于 `lucide-static` 生成，运行时不直接使用 SVG，而是使用预渲染 PNG。
+
+- 生成脚本：`scripts/generate-lucide-icons.js`
+- npm 命令：`npm run generate:icons`
+- 输出目录：`miniprogram/assets/icons/lucide`
+- 输出格式：`{icon-name}-{variant}.png`
+
+### 6.2 设计约束
+
+- 默认只使用 `active` 和 `inactive` 两个变体，避免任意扩散颜色。
+- `active` 用于强调态、入口卡片、空状态主视觉。
+- `inactive` 主要用于 tabbar 非选中态。
+- 页面层优先传 `icon-name`，不要直接硬编码 `/assets/icons/lucide/...png` 路径。
+- 仅在非常规资源或兼容老代码时，才回退到 `icon` 绝对路径字段。
+
+### 6.3 当前推荐映射
+
+| 语义 | icon-name | 典型场景 |
+|------|-----------|----------|
+| 首页 | `house` | Tabbar 首页 |
+| 时间轴 | `calendar-range` | Tabbar、时间轴空状态 |
+| 我的 | `circle-user-round` | Tabbar、个人资料 |
+| 宝宝档案 | `baby` | 档案管理、建档 |
+| 上传照片 | `image-plus` | 上传入口 |
+| 照片流 | `images` | 照片浏览、空状态 |
+| 家庭成员 | `users-round` | 协作入口 |
+| 回收站 | `trash-2` | 风险操作、回收站 |
+| 反馈 | `message-square-heart` | 反馈入口 |
+| 新建/建档 | `badge-plus` | 建档空状态 |
+| 编辑资料 | `user-round-pen` | 资料编辑 |
+| 权限 | `shield-check` | 可见范围、角色 |
+| 地点 | `map-pinned` | 地点字段 |
+| 文本描述 | `text` | 描述字段 |
+| 日期时间 | `clock-3` | 日期字段 |
+| 下载 | `download` | 下载动作 |
+| 身份/联系人 | `user-round-check` | 联系方式、关系备注 |
+
+### 6.4 组件 API 约定
+
+以下组件已经支持统一图标解析：
+
+- `action-card`
+- `empty-state-panel`
+- `form-field`
+- `metric-info-card`
+
+推荐写法：
+
+```xml
+<action-card icon-name="images" title="浏览照片流" desc="按时间倒序快速翻看最近记录"></action-card>
+
+<empty-state-panel icon-name="badge-plus" title="先创建一个宝宝档案" desc="创建后再继续当前流程。"></empty-state-panel>
+
+<form-field icon-name="clock-3" label="拍摄日期">
+  <picker mode="date">
+    <view class="picker-field">2026-05-21</view>
+  </picker>
+</form-field>
+
+<metric-info-card icon-name="map-pinned" label="地点" value="朝阳公园"></metric-info-card>
+```
+
+兼容字段如下：
+
+- `icon-name`: 推荐，语义化图标名。
+- `icon-variant`: 可选，默认 `active`。
+- `icon`: 兼容旧写法，直接传完整图片路径。
+
+### 6.5 维护原则
+
+- 新增页面时，先复用现有 icon-name，不要为局部页面随意新增一套图标含义。
+- 新增图标前，先确认是否能复用已有语义映射。
+- 如果必须新增图标，先更新生成脚本，再执行 `npm run generate:icons`，最后更新本文档。
+
+---
+
+## 7. 组件收敛约定
+
+### 7.1 页面层职责
+
+- 页面只负责组织内容与状态，不直接定义图标资源路径和重复结构。
+- 优先使用已有的 `ui-hero`、`section-header`、`action-card`、`empty-state-panel`、`form-field`、`metric-info-card`。
+- 相同语义的卡片、空状态、表单标签应保持一致的图标和文案调性。
+
+### 7.2 优先收敛顺序
+
+做 UI 重构时，优先按以下顺序收敛：
+
+1. 先收敛结构组件，再改页面细节。
+2. 先收敛语义化 API，再处理资源路径。
+3. 先解决高频入口，再处理长尾页面。
+
+### 7.3 避免的问题
+
+- 不要在页面里重复写一整套卡片结构，只差一个标题或图标。
+- 不要直接把 PNG 路径散落到所有页面模板中。
+- 不要在不同页面里给同一动作分配不同图标语义。
+
+---
+
+## 8. 文档同步要求
+
+出现以下变更时，必须同步更新本文档：
+
+- 新增或移除 lucide 图标。
+- 组件新增图标相关属性。
+- 图标语义映射发生调整。
+- 组件收敛策略变化，影响页面写法。
+
 .btn-secondary:active {
   background-color: #A1887F;
 }

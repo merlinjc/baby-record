@@ -1,3 +1,11 @@
 {
-  "navigationBarTitleText": "照片流"
+  "navigationBarTitleText": "照片流",
+  "usingComponents": {
+    "ui-hero": "/components/ui-hero/index",
+    "section-header": "/components/section-header/index",
+    "status-card": "/components/status-card/index",
+    "photo-entry-card": "/components/photo-entry-card/index",
+    "empty-state-panel": "/components/empty-state-panel/index",
+    "summary-stat": "/components/summary-stat/index"
+  }
 }

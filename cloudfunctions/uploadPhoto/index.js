@@ -1,4 +1,4 @@
-const { ensureUser, verifyBabyAccess } = require('../_shared/auth')
+const { ensureUser, verifyBabyAccess, canUploadPhoto, normalizePhotoPermission } = require('../_shared/auth')
 const { cloud, db } = require('../_shared/db')
 
 exports.main = async (event) => {
@@ -21,7 +21,16 @@ exports.main = async (event) => {
       }
     }
 
-    await verifyBabyAccess(babyId, wxContext.OPENID)
+    const baby = await verifyBabyAccess(babyId, wxContext.OPENID)
+
+    if (!canUploadPhoto(baby, wxContext.OPENID)) {
+      return {
+        code: -1,
+        message: '当前角色没有上传权限'
+      }
+    }
+
+    const safePermission = normalizePhotoPermission(permission)
 
     const now = db.serverDate()
     const fileUrlResult = await cloud.getTempFileURL({
@@ -36,7 +45,7 @@ exports.main = async (event) => {
       fileID: cloudFileID,
       filePath: cloudFileID,
       description,
-      permission,
+      permission: safePermission,
       locationName,
       deleted: false,
       deletedTime: null,

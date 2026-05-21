@@ -11,7 +11,8 @@
     "pages/accept-invitation/accept-invitation",
     "pages/recycle-bin/recycle-bin",
     "pages/feedback/feedback",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/profile-edit/profile-edit"
   ],
   "window": {
     "navigationBarBackgroundColor": "#FFF8DC",

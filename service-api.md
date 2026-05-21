@@ -7,20 +7,36 @@
 **服务层结构：**
 ```
 miniprogram/services/
-├── userService.js    # 用户相关服务
-├── babyService.js    # 宝宝档案服务
-└── photoService.js    # 照片服务
+├── userService.js      # 用户认证、资料同步
+├── babyService.js      # 宝宝档案服务
+├── familyService.js    # 家庭成员与邀请
+└── photoService.js     # 照片服务
 ```
 
 ---
 
 ## 1. 用户服务（userService.js）
 
-### 1.1 获取用户信息
+### 1.1 初始化并确保用户存在
+
+**函数：** `ensureUser()`
+
+**功能描述：** 调用 `checkAuthStatus` 云函数，基于 CloudBase 自动认证获取当前用户；若数据库中不存在用户记录，则自动创建。返回结果会同步到 `App.globalData.userInfo`。
+
+**参数：** 无
+
+**返回值：** `Promise<UserInfo>`
+
+**示例：**
+```javascript
+const userInfo = await userService.ensureUser()
+```
+
+### 1.2 获取用户信息
 
 **函数：** `getUserInfo()`
 
-**功能描述：** 从全局数据或调用云函数获取用户信息
+**功能描述：** 优先读取全局缓存中的用户信息；缓存缺失时回退到 `ensureUser()`。
 
 **参数：** 无
 
@@ -39,48 +55,46 @@ interface UserInfo {
   appId: string
   nickName: string
   avatarUrl: string
-  babyProfiles: string[]  // 宝宝档案ID列表
+  babyProfiles: string[]
+  profileCompleted: boolean
   createTime: Date
   updateTime: Date
 }
 ```
 
-### 1.2 更新用户信息
+说明：`profileCompleted` 当前以“昵称已填写”为准，用于控制邀请等协作动作是否允许继续。
 
-**函数：** `updateUserInfo(userInfo: UserInfo)`
+### 1.3 更新个人资料
 
-**功能描述：** 更新用户信息
+**函数：** `updateUserProfile(payload: UpdateUserProfilePayload)`
+
+**功能描述：** 更新昵称和头像地址，并同步刷新全局用户缓存。
 
 **参数：**
-- `userInfo: UserInfo` - 用户信息对象
+- `payload.nickName: string` - 必填，去首尾空格后不能为空，最大 20 个字符
+- `payload.avatarUrl: string` - 可选，仅允许 `https://` 地址，最大 2048 字符
 
-**返回值：** `Promise<Result>`
+**返回值：** `Promise<UserInfo>`
 
 **示例：**
 ```javascript
-const result = await userService.updateUserInfo({
-  nickName: '新昵称',
-  avatarUrl: 'https://...'
+const userInfo = await userService.updateUserProfile({
+  nickName: 'Merlin 妈妈',
+  avatarUrl: 'https://example.com/avatar.jpg'
 })
 ```
 
-### 1.3 检查登录状态
-
-**函数：** `checkLoginStatus()`
-
-**功能描述：** 检查用户是否已登录
-
-**参数：** 无
-
-**返回值：** `boolean`
-
-**示例：**
-```javascript
-const isLoggedIn = userService.checkLoginStatus()
-if (isLoggedIn) {
-  // 用户已登录
+**UpdateUserProfilePayload 结构：**
+```typescript
+interface UpdateUserProfilePayload {
+  nickName: string
+  avatarUrl?: string
 }
 ```
+
+### 1.4 当前登录态说明
+
+当前小程序没有单独的“登录页”或显式登录 API。用户打开小程序后，CloudBase 会自动注入微信身份，业务侧通过 `checkAuthStatus` 完成“识别用户 + 补齐 users 记录”这一步。
 
 ---
 
@@ -228,6 +242,44 @@ const currentBaby = babyService.getCurrentBaby()
 ```
 
 ---
+
+## 3.1 家庭服务（familyService.js）
+
+### 3.1.1 获取家庭成员
+
+**函数：** `getFamilyMembers(babyId: string)`
+
+**功能描述：** 获取当前宝宝档案的成员列表、当前用户角色和是否可管理成员。
+
+### 3.1.2 创建邀请
+
+**函数：** `inviteMember(payload: InviteMemberPayload)`
+
+**功能描述：** 由创建者或管理员创建一次性邀请码邀请。创建前会校验当前用户是否已完成个人资料。
+
+**参数：**
+- `payload.babyId: string` - 宝宝档案 ID
+- `payload.role: 'admin' | 'member' | 'viewer'` - 被邀请人角色
+- `payload.relationship?: string` - 关系备注
+
+**返回值：** `Promise<InviteResult>`
+
+**说明：**
+- `sharePath` 现在使用 `code` 参数，而不是长期有效的 `token`
+- `inviteCode` 为 8 位一次性邀请码
+- `isOneTime === true` 表示邀请码仅允许单次使用
+
+### 3.1.3 接受邀请
+
+**函数：** `acceptInvitation(inviteCode: string)`
+
+**功能描述：** 使用一次性邀请码加入家庭。邀请码被使用后会立即失效；过期邀请码会被标记为 `expired`。
+
+### 3.1.4 移除成员
+
+**函数：** `removeMember(payload: RemoveMemberPayload)`
+
+**功能描述：** 由创建者或管理员移除非创建者成员。
 
 ## 3. 照片服务（photoService.js）
 
@@ -404,7 +456,7 @@ const result = await photoService.deletePhoto('photo_001')
 
 **函数：** `getDeletedPhotos(babyId: string)`
 
-**功能描述：** 获取已删除的照片列表（回收站）
+**功能描述：** 获取当前用户有恢复权限的已删除照片列表（回收站）
 
 **参数：**
 - `babyId: string` - 宝宝档案ID
@@ -691,11 +743,96 @@ const cloudPath = fileUtil.generateCloudPath('bp_001', 'photo_001')
     "nickName": "",
     "avatarUrl": "",
     "babyProfiles": [],
+    "profileCompleted": false,
     "createTime": "2026-05-21T10:00:00.000Z",
     "updateTime": "2026-05-21T10:00:00.000Z"
   }
 }
 ```
+
+### 5.1.1 updateUserProfile
+
+**功能：** 更新当前用户的昵称和头像资料
+
+**输入：**
+```json
+{
+  "nickName": "Merlin 妈妈",
+  "avatarUrl": "https://example.com/avatar.jpg"
+}
+```
+
+**输出：**
+```json
+{
+  "code": 0,
+  "message": "更新成功",
+  "data": {
+    "_id": "user_001",
+    "_openid": "oXXXX",
+    "nickName": "Merlin 妈妈",
+    "avatarUrl": "https://example.com/avatar.jpg",
+    "profileCompleted": true
+  }
+}
+```
+
+约束：昵称不能为空且最长 20 个字符；头像地址仅允许 `https://`。
+
+### 5.1.2 inviteMember
+
+**功能：** 创建一次性邀请码邀请
+
+**输入：**
+```json
+{
+  "babyId": "bp_001",
+  "role": "member",
+  "relationship": "奶奶"
+}
+```
+
+**输出：**
+```json
+{
+  "code": 0,
+  "message": "邀请已创建",
+  "data": {
+    "inviteCode": "A1B2C3D4",
+    "sharePath": "/pages/accept-invitation/accept-invitation?code=A1B2C3D4",
+    "isOneTime": true
+  }
+}
+```
+
+说明：邀请码为一次性消费，成功加入后立即失效。
+
+### 5.1.3 acceptInvitation
+
+**功能：** 使用一次性邀请码加入家庭
+
+**输入：**
+```json
+{
+  "code": "A1B2C3D4"
+}
+```
+
+**输出：**
+```json
+{
+  "code": 0,
+  "message": "已加入家庭",
+  "data": {
+    "babyId": "bp_001",
+    "babyName": "小明",
+    "role": "member",
+    "inviteCode": "A1B2C3D4"
+  }
+}
+```
+
+说明：后端会在事务中完成邀请码状态更新、成员写入和用户可访问档案更新。
 
 ### 5.2 createBabyProfile
 

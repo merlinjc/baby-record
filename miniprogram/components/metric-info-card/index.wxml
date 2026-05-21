@@ -1,0 +1,10 @@
+<view class="metric-card {{extraClass}}">
+  <view class="metric-card__label-row">
+    <view wx:if="{{resolvedIcon}}" class="metric-card__icon-shell">
+      <image class="metric-card__icon" src="{{resolvedIcon}}" mode="aspectFit"></image>
+    </view>
+    <view class="metric-card__label">{{label}}</view>
+  </view>
+  <view class="metric-card__value mt-16">{{value}}</view>
+  <view wx:if="{{meta}}" class="metric-card__meta">{{meta}}</view>
+</view>

@@ -1,20 +1,22 @@
 <view class="page">
-  <view class="hero-card hero-card--accept">
-    <view class="hero-topline">
-      <view class="chip">邀请加入</view>
-      <view class="hero-accent">JOIN</view>
-    </view>
-    <view class="page-title mt-24">加入宝宝成长记录</view>
-    <view class="page-subtitle mt-16">接受后，你将获得当前宝宝档案的访问权限。</view>
-  </view>
+  <ui-hero
+    extra-class="hero-card--accept"
+    chip="邀请加入"
+    accent="JOIN"
+    kicker="一次性邀请码只允许单次加入，分享链路被转发放大后也不会重复生效。"
+    title="加入宝宝成长记录"
+    subtitle="输入家人给你的邀请码后即可加入，邀请码被使用一次后会立刻失效。"
+  ></ui-hero>
 
-  <view class="section-card mt-24 status-card">
-    <view wx:if="{{accepted}}" class="status-card__title">已成功加入</view>
-    <view wx:else class="status-card__title">准备接受邀请</view>
-    <view class="status-card__desc mt-16">{{accepted ? '现在可以返回首页查看宝宝的照片和时间轴。' : '点击下方按钮即可接受邀请。'}}</view>
+  <status-card extra-class="mt-24 onboarding-card" title="{{accepted ? '已成功加入' : '输入邀请码'}}" desc="{{accepted ? '现在可以返回首页查看宝宝的照片和时间轴。' : '请输入家人分享给你的 8 位邀请码。'}}">
+    <view wx:if="{{!accepted}}" class="field-group mt-24">
+      <input class="text-input invite-code-input" maxlength="8" placeholder="例如：A1B2C3D4" value="{{inviteCode}}" bindinput="onCodeInput" />
+      <view class="section-caption mt-16">邀请码为一次性使用，过期或已被使用后需要重新生成。</view>
+    </view>
+    <view wx:else class="status-inline mt-24">已写入当前家庭成员列表</view>
     <view class="status-card__actions">
       <button wx:if="{{!accepted}}" class="btn-primary" loading="{{accepting}}" bindtap="acceptInvite">接受邀请</button>
       <button wx:if="{{accepted}}" class="btn-secondary" bindtap="goHome">返回首页</button>
     </view>
-  </view>
+  </status-card>
 </view>

@@ -1,3 +1,12 @@
 {
-  "navigationBarTitleText": "成长日记"
+  "navigationBarTitleText": "成长日记",
+  "usingComponents": {
+    "ui-hero": "/components/ui-hero/index",
+    "section-header": "/components/section-header/index",
+    "status-card": "/components/status-card/index",
+    "action-card": "/components/action-card/index",
+    "empty-state-panel": "/components/empty-state-panel/index",
+    "summary-stat": "/components/summary-stat/index",
+    "photo-entry-card": "/components/photo-entry-card/index"
+  }
 }

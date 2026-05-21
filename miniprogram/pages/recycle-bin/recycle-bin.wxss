@@ -1,5 +1,5 @@
 .hero-card--recycle {
-  background: linear-gradient(145deg, #fff8ed, #f4eadc 55%, #ecd2ba 100%);
+  background: linear-gradient(145deg, #fff8ef, #f3e2d5 55%, #e6c2a5 100%);
 }
 
 .recycle-list {
@@ -12,15 +12,16 @@
   display: flex;
   gap: 20rpx;
   padding: 24rpx;
-  border-radius: 24rpx;
+  border-radius: 26rpx;
   background: linear-gradient(180deg, #fffdf9, #fff4e6);
-  box-shadow: 0 8rpx 24rpx rgba(139, 69, 19, 0.08);
+  border: 2rpx solid rgba(229, 205, 178, 0.45);
+  box-shadow: 0 12rpx 28rpx rgba(139, 69, 19, 0.08);
 }
 
 .recycle-card__image {
   width: 180rpx;
   height: 180rpx;
-  border-radius: 18rpx;
+  border-radius: 20rpx;
   background: #f3e5d0;
 }
 

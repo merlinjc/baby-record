@@ -1,41 +1,33 @@
 <view class="page">
-  <view class="hero-card hero-card--baby-edit">
-    <view class="hero-backdrop hero-backdrop--edit"></view>
-    <view class="hero-topline">
-      <view class="chip">创建档案</view>
-      <view class="hero-accent">SETUP</view>
-    </view>
-    <view class="page-title mt-24">创建宝宝档案</view>
-    <view class="page-subtitle mt-16">P0 仅要求姓名、生日、性别三项，尽快进入上传流程。</view>
-  </view>
+  <ui-hero
+    extra-class="hero-card--baby-edit"
+    chip="创建档案"
+    accent="SETUP"
+    kicker="先用最少字段完成建档，把用户尽快带入上传和时间轴闭环。"
+    title="创建宝宝档案"
+    subtitle="P0 仅要求姓名、生日、性别三项，后续更多资料可以再扩展。"
+  ></ui-hero>
 
   <view class="form-card mt-24 setup-card">
-    <view class="section-header mb-32">
-      <view>
-        <view class="section-title">基础信息</view>
-        <view class="section-caption mt-16">只填最少字段，先把记录流程跑通</view>
-      </view>
-      <view class="chip">P0</view>
-    </view>
+    <section-header title="基础信息" caption="只填最少字段，先把记录流程跑通" chip="P0"></section-header>
 
-    <view class="field-group mb-32">
-      <text class="field-label">宝宝姓名</text>
+    <form-field icon-name="baby" label="宝宝姓名" extra-class="mb-32">
       <input class="text-input" placeholder="例如：小满" maxlength="20" value="{{name}}" bindinput="onNameInput" />
-    </view>
+    </form-field>
 
-    <view class="field-group mb-32">
-      <text class="field-label">出生日期</text>
+    <form-field icon-name="clock-3" label="出生日期" extra-class="mb-32">
       <picker mode="date" value="{{birthday}}" end="2099-12-31" bindchange="onBirthdayChange">
         <view class="picker-field">{{birthday}}</view>
       </picker>
-    </view>
+    </form-field>
 
-    <view class="field-group">
-      <text class="field-label">性别</text>
+    <form-field icon-name="user-round-check" label="性别">
       <picker mode="selector" range="{{genderOptions}}" value="{{genderValue}}" bindchange="onGenderChange">
         <view class="picker-field">{{genderOptions[genderValue]}}</view>
       </picker>
-    </view>
+    </form-field>
+
+    <info-pill-list extra-class="mt-24" items="{{['生日用于年龄计算', '当前档案会决定上传归属']}}"></info-pill-list>
   </view>
 
   <button class="btn-primary mt-32" loading="{{isSaving}}" bindtap="saveBaby">保存并进入首页</button>

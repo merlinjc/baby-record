@@ -1,21 +1,5 @@
 .hero-card--baby-profile {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(145deg, #fff8ed, #f5ebdf 56%, #ead6bf 100%);
-}
-
-.hero-backdrop--baby {
-  position: absolute;
-  top: -32rpx;
-  right: -10rpx;
-  width: 210rpx;
-  height: 210rpx;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0));
-}
-
-.archive-note-card {
-  background: linear-gradient(180deg, #fffdf9, #fff5e8);
+  background: linear-gradient(145deg, #fff8ed, #f5e5d6 56%, #e8c8a9 100%);
 }
 
 .baby-list {
@@ -25,7 +9,8 @@
 }
 
 .baby-card {
-  background: linear-gradient(180deg, #fffdf9, #fff3e5);
+  background: linear-gradient(180deg, rgba(255, 253, 249, 0.97), rgba(255, 243, 229, 0.98));
+  border: 2rpx solid rgba(229, 205, 178, 0.45);
   padding: 28rpx;
 }
 
@@ -51,17 +36,15 @@
   gap: 16rpx;
 }
 
-.baby-card__tag {
-  padding: 12rpx 18rpx;
-  border-radius: 999rpx;
-  background: #f8ead7;
-  color: #8b4513;
-  font-size: 22rpx;
+.baby-card__summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
 }
 
-.baby-card__tag--soft {
-  background: #fff8ee;
-  color: #9d7d67;
+.baby-card__summary-item {
+  flex: 1;
+  min-width: 220rpx;
 }
 
 .baby-card__button {

@@ -1,89 +1,86 @@
 <view class="page">
-  <view class="hero-card hero-card--profile">
-    <view class="hero-backdrop hero-backdrop--profile"></view>
-    <view class="hero-topline">
-      <view class="chip">CloudBase MVP</view>
-      <view class="hero-accent">PROFILE</view>
-    </view>
-    <view class="page-title mt-24">{{userInfo ? userInfo.nickName : '成长记录者'}}</view>
-    <view class="page-subtitle mt-16">当前阶段已经接入档案、照片、家庭成员、回收站和反馈链路，后续再做整体 UI 重构。</view>
-  </view>
+  <ui-hero
+    extra-class="hero-card--profile"
+    chip="CloudBase MVP"
+    accent="PROFILE"
+    kicker="把统计、当前档案和工具入口聚合到同一页，减少分散入口造成的认知负担。"
+    title="{{userInfo && userInfo.nickName ? userInfo.nickName : '成长记录者'}}"
+    subtitle="当前阶段已经接入档案、照片、家庭成员、回收站和反馈链路，这里作为统一的个人工作台。"
+  ></ui-hero>
 
   <block wx:if="{{isLoading}}">
-    <view class="section-card mt-24 status-card">
-      <view class="loading-dots">
-        <view class="loading-dots__item"></view>
-        <view class="loading-dots__item"></view>
-        <view class="loading-dots__item"></view>
-      </view>
-      <view class="status-card__title">正在整理个人页数据</view>
-      <view class="status-card__desc">正在读取当前用户、宝宝档案和照片统计。</view>
-    </view>
+    <status-card extra-class="mt-24" loading="{{true}}" title="正在整理个人页数据" desc="正在读取当前用户、宝宝档案和照片统计。"></status-card>
   </block>
 
   <block wx:elif="{{loadError}}">
-    <view class="section-card mt-24 status-card">
-      <view class="status-card__title">个人页暂时不可用</view>
-      <view class="status-card__desc">{{loadError}}</view>
+    <status-card extra-class="mt-24" title="个人页暂时不可用" desc="{{loadError}}">
       <view class="status-card__actions">
         <button class="btn-secondary" bindtap="retryLoad">重新加载</button>
       </view>
-    </view>
+    </status-card>
   </block>
 
   <block wx:else>
-    <view class="summary-card mt-24 panel-card">
-      <view class="section-header">
-        <view>
-          <view class="section-title">记录概览</view>
-          <view class="section-caption mt-16">这里的照片统计以当前档案为准</view>
+    <view class="summary-card mt-24 panel-card profile-identity-card">
+      <section-header title="个人资料" caption="补全昵称和头像后，分享链路中的身份会更清晰" chip="Identity"></section-header>
+      <view class="profile-identity mt-24">
+        <image wx:if="{{userInfo && userInfo.avatarUrl}}" class="profile-avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+        <view wx:else class="profile-avatar profile-avatar--fallback">{{userInfo && userInfo.nickName ? userInfo.nickName.slice(0, 1) : '我'}}</view>
+        <view class="profile-identity__body">
+          <view class="profile-identity__name">{{userInfo && userInfo.nickName ? userInfo.nickName : '未设置昵称'}}</view>
+          <view class="section-caption mt-16">{{userInfo && userInfo.profileCompleted ? '资料已完成，可用于邀请人身份展示。' : '资料未完成，部分分享和协作动作会被限制。'}}</view>
         </view>
-        <view class="chip">统计</view>
+      </view>
+      <view wx:if="{{profileReminder}}" class="info-band mt-24">{{profileReminder}}</view>
+      <view class="quick-actions mt-24">
+        <action-card icon-name="user-round-pen" title="完善个人资料" desc="设置昵称和头像，补齐对外展示身份" bind:tap="goProfileEdit"></action-card>
+      </view>
+    </view>
+
+    <view class="summary-card mt-24 panel-card">
+      <section-header title="当前身份" caption="先确认自己正在哪个家庭上下文中操作" chip="Context"></section-header>
+      <view class="context-grid mt-24">
+        <metric-info-card label="当前宝宝" value="{{currentBaby ? currentBaby.name : '未选择'}}" meta="{{currentBaby ? currentBaby.birthday : '先创建或切换档案'}}"></metric-info-card>
+        <metric-info-card label="我的角色" value="{{profileContext.roleLabel}}" meta="{{profileContext.canManage ? '可管理成员与内容' : profileContext.canUpload ? '可上传和查看内容' : '仅可查看内容'}}"></metric-info-card>
       </view>
       <view class="summary-grid mt-24">
-        <view class="summary-tile">
-          <view class="summary-value">{{stats.babies}}</view>
-          <view class="summary-label">宝宝档案</view>
-        </view>
-        <view class="summary-tile">
-          <view class="summary-value">{{stats.photos}}</view>
-          <view class="summary-label">当前档案照片</view>
-        </view>
-        <view class="summary-tile">
-          <view class="summary-value">{{stats.timelineMonths}}</view>
-          <view class="summary-label">时间轴月份</view>
-        </view>
+        <summary-stat value="{{profileContext.memberCount}}" label="当前家庭成员"></summary-stat>
+        <summary-stat value="{{profileContext.recycleCount}}" label="回收站照片"></summary-stat>
+        <summary-stat value="{{profileContext.lastPhotoDateLabel || '暂无'}}" label="最近上传日期"></summary-stat>
+      </view>
+      <view class="info-band mt-24">{{profileContext.collabHint}}</view>
+    </view>
+
+    <view class="summary-card mt-24 panel-card">
+      <section-header title="记录概览" caption="这里的照片统计以当前档案为准" chip="统计"></section-header>
+      <view class="summary-grid mt-24">
+        <summary-stat value="{{stats.babies}}" label="宝宝档案"></summary-stat>
+        <summary-stat value="{{stats.photos}}" label="当前档案照片"></summary-stat>
+        <summary-stat value="{{stats.timelineMonths}}" label="时间轴月份"></summary-stat>
       </view>
     </view>
 
     <view class="section-card mt-24 panel-card">
-      <view class="section-header">
-        <view>
-          <view class="section-title">当前档案</view>
-          <view class="section-caption mt-16">快速进入档案、上传和时间轴管理</view>
-        </view>
-        <view class="chip">入口</view>
-      </view>
-      <view class="profile-highlight mt-24">{{currentBaby ? currentBaby.name + ' · ' + currentBaby.birthday : '尚未创建宝宝档案'}}</view>
+      <section-header title="当前档案" caption="当前档案决定上传归属、时间轴默认数据源和成员管理对象" chip="入口"></section-header>
+      <view class="profile-highlight mt-24">{{currentBaby ? currentBaby.name + ' · ' + currentBaby.birthday + ' · ' + profileContext.roleLabel : '尚未创建宝宝档案'}}</view>
+      <view class="info-band mt-24">{{currentBaby ? '切换当前档案前，请确认后续上传和时间轴查看对象。' : '创建档案后，这里会成为你的个人工作台。'}}</view>
       <view class="quick-actions mt-24">
-        <button class="btn-secondary quick-actions__item" bindtap="goBabyProfiles">管理档案</button>
-        <button class="btn-secondary quick-actions__item" bindtap="goTimeline">查看时间轴</button>
-        <button class="btn-secondary quick-actions__item" bindtap="goUpload">继续上传</button>
+        <action-card icon-name="baby" title="管理档案" desc="查看全部档案，确认当前宝宝并切换上下文" bind:tap="goCurrentBaby"></action-card>
+        <action-card icon-name="calendar-range" title="查看时间轴" desc="按时间聚合回看成长记录" bind:tap="goTimeline"></action-card>
+        <action-card icon-name="image-plus" title="继续上传" desc="把今天的新照片直接收入档案" bind:tap="goUpload"></action-card>
       </view>
     </view>
 
     <view class="section-card mt-24 panel-card">
-      <view class="section-header">
-        <view>
-          <view class="section-title">协作与工具</view>
-          <view class="section-caption mt-16">围绕家庭协作和误删恢复的补充能力</view>
-        </view>
-        <view class="chip">Tools</view>
-      </view>
+      <section-header title="协作与工具" caption="围绕家庭协作、权限边界和误删恢复的补充能力" chip="Tools"></section-header>
       <view class="quick-actions mt-24">
-        <button class="btn-secondary quick-actions__item" bindtap="goFamilyMembers">家庭成员</button>
-        <button class="btn-secondary quick-actions__item" bindtap="goRecycleBin">回收站</button>
-        <button class="btn-secondary quick-actions__item" bindtap="goFeedback">意见反馈</button>
+        <action-card icon-name="users-round" title="家庭成员" desc="查看邀请关系、成员角色和可管理范围" bind:tap="goFamilyMembers"></action-card>
+        <action-card icon-name="trash-2" title="回收站" desc="恢复误删照片，避免记录丢失" bind:tap="goRecycleBin"></action-card>
+        <action-card icon-name="message-square-heart" title="意见反馈" desc="补充体验问题和下一步需求" bind:tap="goFeedback"></action-card>
+      </view>
+      <view class="summary-grid mt-24">
+        <summary-stat value="{{profileContext.canManage ? '可管理' : '不可管理'}}" label="成员与权限"></summary-stat>
+        <summary-stat value="{{profileContext.canUpload ? '可上传' : '只读'}}" label="内容写入能力"></summary-stat>
       </view>
     </view>
   </block>

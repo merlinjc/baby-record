@@ -120,7 +120,7 @@ Page({
   },
 
   openPhotoDetail(event) {
-    const { id } = event.currentTarget.dataset
+    const id = event.detail && event.detail.id ? event.detail.id : event.currentTarget.dataset.id
     wx.navigateTo({ url: '/pages/photo-detail/photo-detail?id=' + id })
   },
 

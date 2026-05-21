@@ -1,6 +1,31 @@
 const crypto = require('crypto')
-const { ensureUser, verifyBabyAccess, canManageBaby } = require('../_shared/auth')
+const {
+  ensureUser,
+  verifyBabyAccess,
+  canManageBaby,
+  normalizeMemberRole,
+  ensureCompletedUserProfile
+} = require('../_shared/auth')
 const { db } = require('../_shared/db')
+
+function createInviteCode() {
+  return crypto.randomBytes(4).toString('hex').toUpperCase()
+}
+
+async function generateUniqueInviteCode() {
+  for (let attempt = 0; attempt < 6; attempt += 1) {
+    const inviteCode = createInviteCode()
+    const existing = await db.collection('invitations').where({
+      inviteCode
+    }).limit(1).get()
+
+    if (!(existing.data || []).length) {
+      return inviteCode
+    }
+  }
+
+  throw new Error('邀请码生成失败，请重试')
+}
 
 exports.main = async (event) => {
   try {
@@ -14,6 +39,8 @@ exports.main = async (event) => {
       }
     }
 
+    ensureCompletedUserProfile(user)
+
     const baby = await verifyBabyAccess(babyId, wxContext.OPENID)
 
     if (!canManageBaby(baby, wxContext.OPENID)) {
@@ -23,7 +50,9 @@ exports.main = async (event) => {
       }
     }
 
+    const safeRole = normalizeMemberRole(role)
     const token = crypto.randomBytes(12).toString('hex')
+    const inviteCode = await generateUniqueInviteCode()
     const now = db.serverDate()
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
 
@@ -32,9 +61,10 @@ exports.main = async (event) => {
       babyName: baby.name,
       inviterOpenId: wxContext.OPENID,
       inviterName: user.nickName || '成长记录者',
-      role,
+      role: safeRole,
       relationship,
       token,
+      inviteCode,
       status: 'pending',
       expiresAt,
       createTime: now,
@@ -51,10 +81,12 @@ exports.main = async (event) => {
       data: {
         _id: addResult._id,
         token,
-        role,
+        inviteCode,
+        role: safeRole,
         relationship,
-        sharePath: '/pages/accept-invitation/accept-invitation?token=' + token,
-        expiresAt
+        sharePath: '/pages/accept-invitation/accept-invitation?code=' + inviteCode,
+        expiresAt,
+        isOneTime: true
       }
     }
   } catch (error) {

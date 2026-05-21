@@ -1,0 +1,3 @@
+<view class="upload-tip-row {{extraClass}}">
+  <view wx:for="{{items}}" wx:key="*this" class="pill">{{item}}</view>
+</view>

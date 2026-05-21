@@ -1,3 +1,9 @@
 {
-  "navigationBarTitleText": "创建宝宝档案"
+  "navigationBarTitleText": "创建宝宝档案",
+  "usingComponents": {
+    "ui-hero": "/components/ui-hero/index",
+    "section-header": "/components/section-header/index",
+    "form-field": "/components/form-field/index",
+    "info-pill-list": "/components/info-pill-list/index"
+  }
 }

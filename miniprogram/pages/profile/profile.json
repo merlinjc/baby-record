@@ -1,3 +1,11 @@
 {
-  "navigationBarTitleText": "我的"
+  "navigationBarTitleText": "我的",
+  "usingComponents": {
+    "ui-hero": "/components/ui-hero/index",
+    "section-header": "/components/section-header/index",
+    "status-card": "/components/status-card/index",
+    "action-card": "/components/action-card/index",
+    "summary-stat": "/components/summary-stat/index",
+    "metric-info-card": "/components/metric-info-card/index"
+  }
 }

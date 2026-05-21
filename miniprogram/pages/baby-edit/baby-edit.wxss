@@ -1,23 +1,8 @@
 .hero-card--baby-edit {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(145deg, #fff8ed, #f3e7d8 56%, #ecccac 100%);
-}
-
-.hero-backdrop--edit {
-  position: absolute;
-  top: -40rpx;
-  right: -16rpx;
-  width: 220rpx;
-  height: 220rpx;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
+  background: linear-gradient(145deg, #fff8ef, #f3e1d4 56%, #e5bea1 100%);
 }
 
 .setup-card {
-  background: linear-gradient(180deg, #fffdf9, #fff3e4);
-}
-
-.field-group {
-  display: block;
+  background: linear-gradient(180deg, rgba(255, 253, 249, 0.97), rgba(255, 243, 228, 0.98));
+  border: 2rpx solid rgba(229, 205, 178, 0.45);
 }

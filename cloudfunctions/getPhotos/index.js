@@ -23,6 +23,34 @@ async function attachTempFileUrls(photos) {
   }))
 }
 
+async function loadVisiblePhotos(babyId, baby, openid) {
+  const pageSize = 100
+  let skip = 0
+  let allVisiblePhotos = []
+  let hasMore = true
+
+  while (hasMore) {
+    const result = await db.collection('photos').where({
+      babyId,
+      deleted: false
+    })
+      .orderBy('photoDate', 'desc')
+      .orderBy('createTime', 'desc')
+      .skip(skip)
+      .limit(pageSize)
+      .get()
+
+    const currentBatch = result.data || []
+    const hydratedPhotos = await attachTempFileUrls(currentBatch)
+    allVisiblePhotos = allVisiblePhotos.concat(hydratedPhotos.filter((photo) => canViewPhoto(photo, baby, openid)))
+
+    hasMore = currentBatch.length === pageSize
+    skip += currentBatch.length
+  }
+
+  return allVisiblePhotos
+}
+
 exports.main = async (event) => {
   try {
     const { wxContext } = await ensureUser()
@@ -40,18 +68,7 @@ exports.main = async (event) => {
     const safePage = Math.max(1, Number(page) || 1)
     const safePageSize = Math.min(50, Math.max(1, Number(pageSize) || 20))
 
-    const collection = db.collection('photos').where({
-      babyId,
-      deleted: false
-    })
-
-    const listResult = await collection
-      .orderBy('photoDate', 'desc')
-      .orderBy('createTime', 'desc')
-      .get()
-
-    const hydratedPhotos = await attachTempFileUrls(listResult.data || [])
-    const visiblePhotos = hydratedPhotos.filter((photo) => canViewPhoto(photo, baby, wxContext.OPENID))
+    const visiblePhotos = await loadVisiblePhotos(babyId, baby, wxContext.OPENID)
     const start = (safePage - 1) * safePageSize
     const pageList = visiblePhotos.slice(start, start + safePageSize)
 

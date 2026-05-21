@@ -1,7 +1,8 @@
 .hero-card--feedback {
-  background: linear-gradient(145deg, #fff8ed, #f4eadc 55%, #ecd2ba 100%);
+  background: linear-gradient(145deg, #fff8ef, #f4e1d5 55%, #e5bea2 100%);
 }
 
 .feedback-card {
-  background: linear-gradient(180deg, #fffdf9, #fff3e4);
+  background: linear-gradient(180deg, rgba(255, 253, 249, 0.97), rgba(255, 243, 228, 0.98));
+  border: 2rpx solid rgba(229, 205, 178, 0.45);
 }

@@ -16,60 +16,61 @@ Baby Care Tracker 是一款基于微信小程序的宝宝照片记录工具，�
 ```
 成长日记/
 ├── miniprogram/              # 微信小程序前端
-│   ├── components/          # 组件目录（当前为空，组件内联在页面中）
-│   ├── models/             # 数据模型
-│   ├── pages/              # 页面目录
-│   │   ├── index/         # 首页（照片瀑布流）
-│   │   ├── baby-profile/  # 宝宝档案列表
-│   │   ├── baby-edit/     # 创建/编辑宝宝档案
-│   │   ├── photo-upload/  # 上传照片
-│   │   ├── photo-browse/  # 浏览照片（瀑布流）
-│   │   ├── photo-detail/  # 照片详情
-│   │   ├── photo-time/     # 按时间查看照片
-│   │   ├── family-members/ # 家庭成员管理
-│   │   ├── accept-invitation/ # 接受邀请
-│   │   ├── recycle-bin/   # 回收站
-│   │   └── profile/       # 个人中心
-│   ├── services/           # 服务层（云函数调用封装）
+│   ├── components/             # 可复用组件（ui-hero、status-card、action-card、empty-state-panel 等）
+│   ├── assets/
+│   │   └── icons/
+│   │       └── lucide/         # 由脚本生成的 PNG 图标资源与 manifest
+│   ├── models/                 # 数据模型
+│   ├── pages/                  # 页面目录
+│   │   ├── index/              # 首页（照片瀑布流）
+│   │   ├── baby-profile/       # 宝宝档案列表
+│   │   ├── baby-edit/          # 创建宝宝档案
+│   │   ├── photo-upload/       # 上传照片
+│   │   ├── photo-browse/       # 浏览照片（瀑布流）
+│   │   ├── photo-detail/       # 照片详情
+│   │   ├── photo-time/         # 按时间查看照片
+│   │   ├── family-members/     # 家庭成员管理
+│   │   ├── accept-invitation/  # 接受邀请
+│   │   ├── recycle-bin/        # 回收站
+│   │   ├── feedback/           # 意见反馈
+│   │   ├── profile/            # 个人工作台
+│   │   └── profile-edit/       # 完善个人资料
+│   ├── services/               # 服务层（云函数调用封装）
+│   │   ├── userService.js
 │   │   ├── babyService.js
-│   │   ├── photoService.js
-│   │   └── userService.js
-│   ├── utils/              # 工具函数
-│   │   ├── cloudUtil.js    # 云函数调用封装
-│   │   ├── dateUtil.js     # 日期处理
-│   │   ├── errorUtil.js    # 错误处理
-│   │   └── fileUtil.js     # 文件处理
-│   ├── app.js              # 小程序入口
-│   ├── app.json            # 小程序配置
-│   └── app.wxss            # 全局样式
+│   │   ├── familyService.js
+│   │   └── photoService.js
+│   ├── utils/                  # 工具函数
+│   │   ├── cloudUtil.js        # 云函数调用封装
+│   │   ├── dateUtil.js         # 日期处理
+│   │   ├── errorUtil.js        # 错误处理
+│   │   └── mockStore.js        # 本地兜底数据
+│   ├── app.js                  # 小程序入口
+│   ├── app.json                # 小程序配置
+│   └── app.wxss                # 全局样式
 │
-├── cloudfunctions/          # CloudBase 云函数
-│   ├── checkAuthStatus/   # 检查认证状态（获取/创建用户）
-│   ├── createBabyProfile/  # 创建宝宝档案
-│   ├── getBabyProfiles/   # 获取宝宝档案列表
-│   ├── uploadPhoto/       # 上传照片
-│   ├── getPhotos/         # 获取照片列表
-│   ├── getPhotoDetail/    # 获取照片详情
-│   ├── updatePhoto/       # 更新照片信息
-│   ├── deletePhoto/       # 删除照片（移入回收站）
-│   ├── getDeletedPhotos/   # 获取已删除照片
-│   ├── restorePhoto/      # 恢复照片
-│   ├── getFamilyMembers/  # 获取家庭成员列表
-│   ├── inviteMember/      # 邀请家庭成员
-│   ├── acceptInvitation/  # 接受邀请
-│   ├── removeMember/      # 移除家庭成员
-│   └── auditPhoto/       # 内容审核
+├── cloudfunctions/             # CloudBase 云函数
+│   ├── _shared/                # 共享鉴权与 DB 能力
+│   ├── checkAuthStatus/        # 检查认证状态（获取/创建用户）
+│   ├── updateUserProfile/      # 更新个人资料
+│   ├── createBabyProfile/      # 创建宝宝档案
+│   ├── getBabyProfiles/        # 获取宝宝档案列表
+│   ├── uploadPhoto/            # 上传照片
+│   ├── getPhotos/              # 获取照片列表
+│   ├── getPhotoDetail/         # 获取照片详情
+│   ├── deletePhoto/            # 删除照片（移入回收站）
+│   ├── getDeletedPhotos/       # 获取已删除照片
+│   ├── restorePhoto/           # 恢复照片
+│   ├── getFamilyMembers/       # 获取家庭成员列表
+│   ├── inviteMember/           # 邀请家庭成员
+│   ├── acceptInvitation/       # 接受邀请
+│   └── removeMember/           # 移除家庭成员
 │
-├── specs/                  # 需求与设计文档
-│   └── baby-photo-app/
-│       ├── requirements.md  # 需求文档
-│       ├── design.md        # 设计文档
-│       └── tasks.md         # 任务清单
-│
-├── scripts/                # 脚本工具
-├── project.config.json    # 微信开发者工具配置
-├── cloudbaserc.json      # CloudBase CLI 配置
-└── package.json          # 项目依赖
+├── scripts/
+│   └── generate-lucide-icons.js # Lucide SVG -> 小程序 PNG 图标生成脚本
+├── project.config.json         # 微信开发者工具配置
+├── cloudbaserc.json            # CloudBase CLI 配置
+└── package.json                # 项目依赖与工程脚本
 ```
 
 ---
@@ -111,102 +112,107 @@ sequenceDiagram
 
 ### 关键要点
 
-1. **无需手动登录**：CloudBase 微信小程序认证是自动完成的，用户使用小程序时自动完成认证
-2. **身份自动注入**：云函数中通过 `cloud.getWXContext()` 获取用户身份（OPENID, APPID, UNIONID）
-3. **OPENID 是核心标识**：使用 OPENID 作为用户唯一标识，存入数据库关联用户数据
-4. **无需登录页面**：应用启动后直接进入首页，在后台静默完成用户认证
+1. **无需手动登录**：CloudBase 微信小程序认证是自动完成的，用户打开小程序后自动携带微信身份
+2. **身份自动注入**：云函数通过 `cloud.getWXContext()` 获取 `OPENID / APPID / UNIONID`
+3. **OPENID 是核心标识**：所有用户数据、家庭成员关系、上传记录都围绕 OPENID 建立
+4. **用户记录自动补齐**：`checkAuthStatus` 会查询 `users` 集合，不存在则自动创建空资料用户
+5. **资料完善是协作前置条件**：当前邀请链路要求用户先补全昵称，避免分享页和邀请人身份展示为默认占位
+6. **邀请码一次性消费**：家庭邀请使用 8 位一次性邀请码，成功加入后立即失效，降低链接被转发放大的风险
 
 ### 代码实现
 
 **小程序端（app.js）：**
 ```javascript
-// app.js
+const userService = require('./services/userService')
+const babyService = require('./services/babyService')
+
 App({
-  onLaunch: function () {
-    // 初始化 CloudBase
+  async onLaunch() {
+    this.initCloud()
+    await this.bootstrap()
+  },
+
+  initCloud() {
     wx.cloud.init({
       env: 'neo3-7gtg0bdtc9fcc672',
       traceUser: true
     })
-    
-    // 异步检查登录状态，不阻塞启动流程
-    this.checkLoginStatusAsync()
   },
-  
-  checkLoginStatusAsync: function () {
-    wx.cloud.callFunction({
-      name: 'checkAuthStatus',
-      success: (res) => {
-        if (res.result && res.result.code === 0) {
-          this.globalData.userInfo = res.result.data
-          this.globalData.isLoggedIn = true
-          
-          if (this.onLoginStateChange) {
-            this.onLoginStateChange(true)
-          }
-        }
-      },
-      fail: (err) => {
-        console.error('检查登录状态失败:', err)
-      }
-    })
+
+  async bootstrap() {
+    const userInfo = await userService.ensureUser()
+    const currentBaby = await babyService.getCurrentBaby()
+
+    this.globalData.userInfo = userInfo
+    this.globalData.currentBaby = currentBaby
   },
-  
-  globalData: {
-    userInfo: null,
-    isLoggedIn: false,
-    currentBaby: null
+
+  setUserInfo(userInfo) {
+    this.globalData.userInfo = userInfo
+  },
+
+  setCurrentBaby(baby) {
+    this.globalData.currentBaby = baby
   }
 })
 ```
 
 **云函数端（checkAuthStatus）：**
 ```javascript
-// cloudfunctions/checkAuthStatus/index.js
 const cloud = require('wx-server-sdk')
-cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
+const { hasCompletedUserProfile } = require('../_shared/auth')
 
-exports.main = async (event, context) => {
-  // 获取用户身份 - 由微信自动注入
-  const { OPENID, APPID } = cloud.getWXContext()
-  
-  if (!OPENID) {
-    return { code: -1, message: '获取用户身份失败' }
-  }
-  
-  // 查询用户信息
-  const userResult = await db.collection('users').where({
-    _openid: OPENID
-  }).get()
-  
-  let user = null
-  if (userResult.data.length > 0) {
-    user = userResult.data[0]
-  } else {
-    // 用户不存在，创建新用户
-    const newUser = {
-      _openid: OPENID,
-      appId: APPID,
-      nickName: '',
-      avatarUrl: '',
-      babyProfiles: [],
-      createTime: db.serverDate(),
-      updateTime: db.serverDate()
+cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
+const db = cloud.database()
+
+exports.main = async () => {
+  const { OPENID, APPID, UNIONID } = cloud.getWXContext()
+  const user = await ensureUser()
+
+  return {
+    code: 0,
+    data: {
+      ...user,
+      profileCompleted: hasCompletedUserProfile(user)
     }
-    
-    const addResult = await db.collection('users').add(newUser)
-    user = { _id: addResult._id, ...newUser }
   }
-  
-  return { code: 0, message: '获取用户信息成功', data: user }
 }
 ```
+
+补充说明：`updateUserProfile` 负责昵称、头像写入；`inviteMember` 在生成邀请前会校验资料是否已完善，并生成一次性邀请码；`acceptInvitation` 在事务中消费邀请码，确保单次生效。
 
 ---
 
 ## 核心模块
 
 ### 1. 小程序前端
+
+#### UI 组件与图标工程
+
+- 页面结构优先复用组件层，不在页面里重复定义同构卡片、空状态和表单标签。
+- 当前高频 UI 入口已围绕 `ui-hero`、`section-header`、`action-card`、`empty-state-panel`、`form-field`、`metric-info-card` 收敛。
+- Lucide 图标不在小程序运行时直接使用 SVG，而是在构建辅助流程中生成 PNG，避免运行时兼容问题。
+- 页面层优先传 `icon-name` 与 `icon-variant`，由组件内部解析到 `/assets/icons/lucide/...png`。
+- `action-card`、`empty-state-panel`、`form-field`、`metric-info-card` 当前都兼容 `icon` 老写法，但新增代码应优先使用语义化属性。
+
+#### 图标生成流程
+
+```bash
+npm run generate:icons
+```
+
+流程说明：
+
+1. 从 `lucide-static` 读取源 SVG。
+2. 使用 `@resvg/resvg-js` 渲染 PNG。
+3. 输出 `active` / `inactive` 两个变体到 `miniprogram/assets/icons/lucide`。
+4. 写出 `manifest.json` 作为生成结果索引。
+
+维护要求：
+
+- 新增图标前先检查是否可复用现有语义。
+- 新增图标后必须同步更新生成脚本与 UI 文档。
+- 页面模板中应避免直接散落 PNG 绝对路径。
 
 #### 页面结构
 
@@ -222,7 +228,8 @@ exports.main = async (event, context) => {
 | 家庭成员 | `pages/family-members/family-members` | 家庭成员管理 |
 | 接受邀请 | `pages/accept-invitation/accept-invitation` | 接受家庭成员邀请 |
 | 回收站 | `pages/recycle-bin/recycle-bin` | 已删除照片恢复 |
-| 个人中心 | `pages/profile/profile` | 用户信息和管理 |
+| 个人中心 | `pages/profile/profile` | 用户信息、协作状态和快捷操作 |
+| 完善个人资料 | `pages/profile-edit/profile-edit` | 补全昵称、头像，满足分享前置条件 |
 
 #### TabBar 配置
 
@@ -231,12 +238,14 @@ exports.main = async (event, context) => {
   "tabBar": {
     "list": [
       { "pagePath": "pages/index/index", "text": "首页" },
-      { "pagePath": "pages/photo-browse/photo-browse", "text": "照片" },
+      { "pagePath": "pages/photo-time/photo-time", "text": "时间轴" },
       { "pagePath": "pages/profile/profile", "text": "我的" }
     ]
   }
 }
 ```
+
+补充说明：当前自定义 tabbar 已接入 Lucide PNG 图标。下一步建议继续将 tabbar 数据结构从 `icon/activeIcon` 收敛为 `iconName` + 变体解析，保持与业务组件一致。
 
 ### 2. 服务层（services/）
 
@@ -244,9 +253,10 @@ exports.main = async (event, context) => {
 
 | 服务文件 | 功能描述 |
 |---------|---------|
-| `userService.js` | 用户相关服务（获取用户信息、更新用户信息、检查登录状态） |
-| `babyService.js` | 宝宝档案服务（获取档案列表、创建档案、更新档案、删除档案） |
-| `photoService.js` | 照片服务（上传照片、获取照片列表、获取照片详情、更新照片、删除照片） |
+| `userService.js` | 用户认证、资料读取与更新、全局缓存同步 |
+| `babyService.js` | 宝宝档案服务（获取档案列表、创建档案、切换当前档案） |
+| `familyService.js` | 家庭成员、邀请、接受邀请、移除成员 |
+| `photoService.js` | 照片服务（上传照片、获取照片列表、详情、删除、恢复） |
 
 ### 3. 工具层（utils/）
 
@@ -257,7 +267,7 @@ exports.main = async (event, context) => {
 | `cloudUtil.js` | 云函数调用封装（callCloudFunction、uploadFile、downloadFile、getTempFileURL） |
 | `dateUtil.js` | 日期处理工具（格式化日期、计算年龄等） |
 | `errorUtil.js` | 错误处理工具（统一错误处理和用户提示） |
-| `fileUtil.js` | 文件处理工具（文件压缩、路径生成等） |
+| `mockStore.js` | 本地兜底数据与 mock 持久化 |
 
 ### 4. CloudBase 云函数
 
@@ -265,19 +275,20 @@ exports.main = async (event, context) => {
 
 | 云函数 | 功能描述 |
 |--------|---------|
-| `checkAuthStatus` | 检查认证状态，获取或创建用户信息 |
+| `checkAuthStatus` | 检查认证状态，获取或创建用户信息，并返回 profileCompleted |
+| `updateUserProfile` | 更新昵称、头像，并修正个人资料完成态 |
 | `createBabyProfile` | 创建宝宝档案 |
-| `getBabyProfiles` | 获取用户的宝宝档案列表 |
+| `getBabyProfiles` | 获取用户的宝宝档案列表（按 `users.babyProfiles` 分页读取） |
 | `uploadPhoto` | 上传照片到 CloudBase 存储 |
 | `getPhotos` | 获取照片列表（分页+筛选） |
 | `getPhotoDetail` | 获取照片详情 |
 | `updatePhoto` | 更新照片信息（描述、标签等） |
 | `deletePhoto` | 删除照片（移入回收站） |
-| `getDeletedPhotos` | 获取已删除照片列表 |
+| `getDeletedPhotos` | 获取当前用户可恢复的已删除照片列表 |
 | `restorePhoto` | 恢复已删除照片 |
 | `getFamilyMembers` | 获取家庭成员列表 |
-| `inviteMember` | 邀请家庭成员 |
-| `acceptInvitation` | 接受家庭成员邀请 |
+| `inviteMember` | 创建一次性邀请码邀请家庭成员 |
+| `acceptInvitation` | 接受一次性邀请码邀请 |
 | `removeMember` | 移除家庭成员 |
 | `auditPhoto` | 内容审核（AI 自动或人工） |
 
@@ -285,7 +296,7 @@ exports.main = async (event, context) => {
 
 ## 数据流
 
-### 1. 用户认证数据流
+### 1. 用户认证与资料完成态数据流
 
 ```
 用户打开小程序
@@ -294,21 +305,25 @@ app.js onLaunch
   ↓
 wx.cloud.init() 初始化 CloudBase
   ↓
-checkLoginStatusAsync() 异步检查登录状态
+userService.ensureUser()
   ↓
 调用云函数 checkAuthStatus
   ↓
-云函数中 cloud.getWXContext() 获取 OPENID
+cloud.getWXContext() 获取 OPENID
   ↓
-查询/创建用户信息
+查询/创建 users 记录
   ↓
-返回用户信息到小程序端
+返回用户信息 + profileCompleted
   ↓
-更新 globalData.userInfo 和 globalData.isLoggedIn
+更新 globalData.userInfo
   ↓
-触发 onLoginStateChange 回调
+页面根据 profileCompleted 决定是否展示“完善个人资料”提醒
   ↓
-页面接收到登录状态变更，加载数据
+邀请成员时再次校验资料是否已完善
+  ↓
+生成 8 位一次性邀请码并通过微信转发
+  ↓
+被邀请人输入邀请码后在事务中完成消费与入家
 ```
 
 ### 2. 照片上传数据流
@@ -316,15 +331,13 @@ checkLoginStatusAsync() 异步检查登录状态
 ```
 用户选择照片
   ↓
-photo-upload 页面调用 photoService.uploadPhoto()
+photo-upload 页面调用 photoService.createPhotos()
   ↓
-云函数 uploadPhoto 处理上传
+逐张上传到 CloudBase 存储
   ↓
-照片文件存储到 CloudBase 存储
+云函数 uploadPhoto 校验成员上传权限
   ↓
 照片元数据保存到 CloudBase 数据库
-  ↓
-触发内容审核（AI 自动审核）
   ↓
 返回上传结果
   ↓
@@ -372,6 +385,9 @@ photo-upload 页面调用 photoService.uploadPhoto()
 
 - **CloudBase 自动认证**：依赖微信自动注入的用户身份，无需手动管理登录态
 - **OPENID 验证**：云函数中通过 `cloud.getWXContext()` 获取 OPENID，确保身份可信
+- **资料完成态约束**：邀请成员前必须先补全昵称，降低默认身份参与分享的风险
+- **一次性邀请码**：邀请码使用一次后即失效，后端通过事务消费，降低分享链接被放大复用的风险
+- **输入校验**：昵称长度、头像 URL 协议在前后端双重校验，避免脏数据进入资料和分享链路
 
 ### 2. 数据安全
 
@@ -427,6 +443,6 @@ photo-upload 页面调用 photoService.uploadPhoto()
 
 ---
 
-**文档版本**：v1.0  
+**文档版本**：v1.1  
 **最后更新**：2026-05-21  
 **维护者**：开发团队

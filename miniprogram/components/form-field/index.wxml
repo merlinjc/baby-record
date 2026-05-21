@@ -1,0 +1,11 @@
+<view class="field-group {{extraClass}}">
+  <block wx:if="{{label}}">
+    <view class="field-label-row">
+      <view wx:if="{{resolvedIcon}}" class="field-label-row__icon-shell">
+        <image class="field-label-row__icon" src="{{resolvedIcon}}" mode="aspectFit"></image>
+      </view>
+      <text class="field-label">{{label}}</text>
+    </view>
+  </block>
+  <slot></slot>
+</view>

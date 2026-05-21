@@ -1,22 +1,22 @@
 <view class="page">
-  <view class="hero-card hero-card--feedback">
-    <view class="hero-topline">
-      <view class="chip">意见反馈</view>
-      <view class="hero-accent">FEEDBACK</view>
-    </view>
-    <view class="page-title mt-24">告诉我们哪里还不够好</view>
-    <view class="page-subtitle mt-16">可以提交功能建议、异常问题或体验上的意见。</view>
-  </view>
+  <ui-hero
+    extra-class="hero-card--feedback"
+    chip="意见反馈"
+    accent="FEEDBACK"
+    kicker="把建议、异常和体验问题统一收口，避免反馈入口过于工具化。"
+    title="告诉我们哪里还不够好"
+    subtitle="可以提交功能建议、异常问题或体验上的意见，后续会按优先级纳入迭代。"
+  ></ui-hero>
 
   <view class="form-card mt-24 feedback-card">
-    <view class="field-group mb-32">
-      <text class="field-label">反馈内容</text>
+    <section-header title="反馈表单" caption="优先写清楚场景、预期行为和实际问题" chip="{{content.length}} / 300"></section-header>
+    <form-field icon-name="message-square-heart" label="反馈内容" extra-class="mb-32">
       <textarea class="text-area" maxlength="300" placeholder="例如：希望时间轴支持更快定位到某一天" value="{{content}}" bindinput="onContentInput"></textarea>
-    </view>
-    <view class="field-group">
-      <text class="field-label">联系方式（可选）</text>
+    </form-field>
+    <form-field icon-name="user-round-check" label="联系方式（可选）">
       <input class="text-input" maxlength="40" placeholder="微信号 / 手机号 / 邮箱" value="{{contact}}" bindinput="onContactInput" />
-    </view>
+    </form-field>
+    <info-pill-list extra-class="mt-24" items="{{['建议说明复现路径', '异常可附带出现时机']}}"></info-pill-list>
   </view>
 
   <button class="btn-primary mt-32" loading="{{submitting}}" bindtap="submitFeedback">提交反馈</button>

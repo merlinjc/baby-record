@@ -1,42 +1,38 @@
 <view class="page">
-  <view class="hero-card hero-card--recycle">
-    <view class="hero-topline">
-      <view class="chip">回收站</view>
-      <view class="hero-accent">RECYCLE</view>
-    </view>
-    <view class="page-title mt-24">最近删除的照片</view>
-    <view class="page-subtitle mt-16">删除后的照片会先进入回收站，可在这里恢复。</view>
-  </view>
+  <ui-hero
+    extra-class="hero-card--recycle"
+    chip="回收站"
+    accent="RECYCLE"
+    kicker="恢复路径需要更清晰，所以把照片预览、状态和动作放在一张卡片内。"
+    title="最近删除的照片"
+    subtitle="删除后的照片会先进入回收站，可在这里恢复，避免误删导致成长记录丢失。"
+  ></ui-hero>
 
   <block wx:if="{{isLoading}}">
-    <view class="section-card mt-24 status-card">
-      <view class="loading-dots">
-        <view class="loading-dots__item"></view>
-        <view class="loading-dots__item"></view>
-        <view class="loading-dots__item"></view>
-      </view>
-      <view class="status-card__title">正在读取回收站</view>
-      <view class="status-card__desc">正在整理最近删除的照片。</view>
-    </view>
+    <status-card extra-class="mt-24" loading="{{true}}" title="正在读取回收站" desc="正在整理最近删除的照片。"></status-card>
   </block>
 
   <block wx:elif="{{loadError}}">
-    <view class="section-card mt-24 status-card">
-      <view class="status-card__title">回收站暂时不可用</view>
-      <view class="status-card__desc">{{loadError}}</view>
+    <status-card extra-class="mt-24" title="回收站暂时不可用" desc="{{loadError}}">
       <view class="status-card__actions">
         <button class="btn-secondary" bindtap="retryLoad">重新加载</button>
       </view>
-    </view>
+    </status-card>
   </block>
 
   <block wx:elif="{{photos.length}}">
+    <view class="section-card mt-24 family-card">
+      <section-header title="待恢复照片" caption="{{photos.length}} 张照片仍可从回收站恢复" chip="{{currentBaby ? currentBaby.name : '当前档案'}}"></section-header>
+    </view>
+
     <view class="recycle-list mt-24">
       <view class="recycle-card" wx:for="{{photos}}" wx:key="_id">
         <image class="recycle-card__image" src="{{item.filePath}}" mode="aspectFill"></image>
         <view class="recycle-card__body">
           <view class="recycle-card__title">{{item.photoDate}}</view>
           <view class="section-caption mt-16">{{item.description || '未添加描述'}}</view>
+          <view wx:if="{{item.locationName}}" class="section-caption mt-16">地点：{{item.locationName}}</view>
+          <view wx:if="{{item.canRestore}}" class="info-band mt-24">恢复后将重新回到照片流和时间轴</view>
           <button wx:if="{{item.canRestore}}" class="btn-secondary mt-24" data-id="{{item._id}}" bindtap="restorePhoto">恢复照片</button>
           <view wx:else class="section-caption mt-24">当前角色无恢复权限</view>
         </view>
@@ -44,9 +40,6 @@
     </view>
   </block>
   <block wx:else>
-    <view class="section-card mt-24 empty-state onboarding-card">
-      <view class="empty-state__title">回收站是空的</view>
-      <view class="empty-state__desc">删除的照片会先出现在这里，方便误删恢复。</view>
-    </view>
+    <empty-state-panel extra-class="mt-24" icon-name="trash-2" title="回收站是空的" desc="删除的照片会先出现在这里，方便误删恢复。"></empty-state-panel>
   </block>
 </view>

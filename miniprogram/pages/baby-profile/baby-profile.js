@@ -1,7 +1,28 @@
 const app = getApp()
 const babyService = require('../../services/babyService')
+const photoService = require('../../services/photoService')
 const dateUtil = require('../../utils/dateUtil')
 const errorUtil = require('../../utils/errorUtil')
+
+function getRoleLabel(role) {
+  if (role === 'creator') {
+    return '创建者'
+  }
+
+  if (role === 'admin') {
+    return '管理员'
+  }
+
+  if (role === 'member') {
+    return '普通成员'
+  }
+
+  if (role === 'viewer') {
+    return '仅查看者'
+  }
+
+  return '未加入'
+}
 
 Page({
   data: {
@@ -22,11 +43,27 @@ Page({
 
     try {
       const currentBaby = await babyService.getCurrentBaby()
-      const babies = (await babyService.listBabyProfiles()).map((item) => ({
-        ...item,
-        ageLabel: dateUtil.getAgeLabel(item.birthday),
-        isCurrent: currentBaby ? currentBaby._id === item._id : false
-      }))
+      const appUser = app.globalData.userInfo || null
+      const rawBabies = await babyService.listBabyProfiles()
+      const babies = []
+
+      for (let index = 0; index < rawBabies.length; index += 1) {
+        const item = rawBabies[index]
+        const photos = await photoService.listPhotosByBaby(item._id)
+        const currentMember = appUser ? (item.members || []).find((member) => member.userId === appUser._openid) : null
+        const currentRole = currentMember ? (currentMember.role || 'member') : ''
+
+        babies.push({
+          ...item,
+          ageLabel: dateUtil.getAgeLabel(item.birthday),
+          isCurrent: currentBaby ? currentBaby._id === item._id : false,
+          roleLabel: getRoleLabel(currentRole),
+          memberCount: (item.members || []).length,
+          photoCount: photos.length,
+          lastPhotoDateLabel: photos[0] ? dateUtil.formatDateLabel(photos[0].photoDate) : '暂无照片',
+          canUpload: currentRole === 'creator' || currentRole === 'admin' || currentRole === 'member'
+        })
+      }
 
       this.setData({
         babies,

@@ -1,0 +1,8 @@
+<view class="photo-card" bindtap="handleTap">
+  <image class="photo-card__image" style="{{photo.imageStyle}}" src="{{photo.filePath}}" mode="aspectFill" lazy-load="{{true}}"></image>
+  <view class="photo-card__body">
+    <view class="photo-card__date">{{photo.photoDate}}</view>
+    <view class="photo-card__desc">{{photo.description || '未添加描述'}}</view>
+    <view class="photo-card__hint">点击查看详情</view>
+  </view>
+</view>

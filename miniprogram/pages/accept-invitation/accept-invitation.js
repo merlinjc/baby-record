@@ -1,28 +1,38 @@
 const familyService = require('../../services/familyService')
 const errorUtil = require('../../utils/errorUtil')
 
+function normalizeInviteCode(code) {
+  return String(code || '').trim().toUpperCase()
+}
+
 Page({
   data: {
-    token: '',
+    inviteCode: '',
     accepting: false,
     accepted: false
   },
 
   onLoad(options) {
     this.setData({
-      token: options.token || ''
+      inviteCode: normalizeInviteCode(options.code || options.inviteCode)
+    })
+  },
+
+  onCodeInput(event) {
+    this.setData({
+      inviteCode: normalizeInviteCode(event.detail.value)
     })
   },
 
   async acceptInvite() {
-    if (!this.data.token || this.data.accepting) {
+    if (!this.data.inviteCode || this.data.accepting) {
       return
     }
 
     this.setData({ accepting: true })
 
     try {
-      const result = await familyService.acceptInvitation(this.data.token)
+      const result = await familyService.acceptInvitation(this.data.inviteCode)
       this.setData({
         accepting: false,
         accepted: true,

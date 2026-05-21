@@ -34,6 +34,10 @@ App({
     this.globalData.currentBaby = baby
   },
 
+  setUserInfo(userInfo) {
+    this.globalData.userInfo = userInfo
+  },
+
   globalData: {
     userInfo: null,
     currentBaby: null

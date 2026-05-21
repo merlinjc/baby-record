@@ -1,0 +1,12 @@
+<view class="tabbar-item {{active ? 'tabbar-item--active' : ''}}" bindtap="handleTap">
+  <view class="tabbar-item__content">
+    <image
+      wx:if="{{resolvedIcon}}"
+      class="tabbar-item__icon"
+      src="{{resolvedIcon}}"
+      mode="aspectFit"
+    ></image>
+    <view class="tabbar-item__label">{{item.text}}</view>
+  </view>
+  <view wx:if="{{active}}" class="tabbar-item__indicator"></view>
+</view>

@@ -104,11 +104,7 @@ async function listCloudPhotosByBaby(babyId) {
 
 async function listPhotosByBaby(babyId) {
   if (cloudUtil.isCloudReady()) {
-    try {
-      return await listCloudPhotosByBaby(babyId)
-    } catch (error) {
-      console.warn('getPhotos fallback to local query', error)
-    }
+    return listCloudPhotosByBaby(babyId)
   }
 
   const db = cloudUtil.getDatabase()
@@ -135,11 +131,7 @@ async function listPhotosPageByBaby(babyId, options = {}) {
   const pageSize = Math.max(1, Number(options.pageSize) || DEFAULT_PAGE_SIZE)
 
   if (cloudUtil.isCloudReady()) {
-    try {
-      return await requestCloudPhotos(babyId, page, pageSize)
-    } catch (error) {
-      console.warn('getPhotos page fallback to local query', error)
-    }
+    return requestCloudPhotos(babyId, page, pageSize)
   }
 
   const photos = await listPhotosByBaby(babyId)
@@ -279,18 +271,16 @@ async function createPhotos(payload) {
 
 async function getPhotoDetail(photoId) {
   if (cloudUtil.isCloudReady()) {
-    try {
-      const result = await cloudUtil.callCloudFunction({
-        name: 'getPhotoDetail',
-        data: { photoId }
-      })
+    const result = await cloudUtil.callCloudFunction({
+      name: 'getPhotoDetail',
+      data: { photoId }
+    })
 
-      if (result && result.code === 0) {
-        return result.data || null
-      }
-    } catch (error) {
-      console.warn('getPhotoDetail fallback to local query', error)
+    if (result && result.code === 0) {
+      return result.data || null
     }
+
+    throw new Error(result && result.message ? result.message : '获取照片详情失败')
   }
 
   const db = cloudUtil.getDatabase()

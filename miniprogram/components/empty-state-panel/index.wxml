@@ -1,0 +1,12 @@
+<view class="section-card empty-state onboarding-card {{extraClass}}">
+  <view wx:if="{{resolvedIcon}}" class="empty-state__icon-shell">
+    <image class="empty-state__icon" src="{{resolvedIcon}}" mode="aspectFit"></image>
+  </view>
+  <block wx:if="{{title}}">
+    <view class="empty-state__title">{{title}}</view>
+  </block>
+  <block wx:if="{{desc}}">
+    <view class="empty-state__desc">{{desc}}</view>
+  </block>
+  <slot></slot>
+</view>

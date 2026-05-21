@@ -1,4 +1,11 @@
 {
   "navigationBarTitleText": "家庭成员",
-  "enableShareAppMessage": true
+  "enableShareAppMessage": true,
+  "usingComponents": {
+    "ui-hero": "/components/ui-hero/index",
+    "section-header": "/components/section-header/index",
+    "status-card": "/components/status-card/index",
+    "empty-state-panel": "/components/empty-state-panel/index",
+    "form-field": "/components/form-field/index"
+  }
 }

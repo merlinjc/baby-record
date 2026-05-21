@@ -1,0 +1,55 @@
+<view class="page">
+  <ui-hero
+    extra-class="hero-card--profile-edit"
+    chip="Identity"
+    accent="PROFILE"
+    kicker="昵称和头像不是装饰字段，它们会直接进入分享与家庭协作链路。"
+    title="完善个人资料"
+    subtitle="先补全对外展示身份，再进行邀请、协作和家庭共享，避免默认身份造成误判。"
+  ></ui-hero>
+
+  <block wx:if="{{isLoading}}">
+    <status-card extra-class="mt-24" loading="{{true}}" title="正在读取个人资料" desc="准备昵称、头像和分享身份信息。"></status-card>
+  </block>
+
+  <block wx:elif="{{loadError}}">
+    <status-card extra-class="mt-24" title="个人资料页暂时不可用" desc="{{loadError}}">
+      <view class="status-card__actions">
+        <button class="btn-secondary" bindtap="retryLoad">重新加载</button>
+      </view>
+    </status-card>
+  </block>
+
+  <block wx:else>
+    <view class="form-card mt-24 panel-card">
+      <section-header title="基础信息" caption="昵称必填，头像建议补全" chip="必填"></section-header>
+      <form-field icon-name="circle-user-round" label="昵称" extra-class="mt-24 mb-24">
+        <input class="text-input" maxlength="20" placeholder="例如：Merlin 妈妈" value="{{nickName}}" bindinput="onNickNameInput" />
+      </form-field>
+      <form-field icon-name="user-round-pen" label="头像地址" extra-class="mb-24">
+        <input class="text-input" maxlength="2048" placeholder="https://..." value="{{avatarUrl}}" bindinput="onAvatarUrlInput" />
+      </form-field>
+      <view class="info-band">当前仅接受 `https://` 头像地址，避免非安全资源混入资料展示链路。</view>
+    </view>
+
+    <view class="section-card mt-24 panel-card">
+      <section-header title="头像建议" caption="先选一个安全的默认头像，也可以填入自己的 https 图片地址" chip="Avatar"></section-header>
+      <view class="avatar-grid mt-24">
+        <view class="avatar-option {{avatarUrl === item ? 'avatar-option--active' : ''}}" wx:for="{{avatarChoices}}" wx:key="*this" data-url="{{item}}" bindtap="chooseAvatar">
+          <image class="avatar-option__image" src="{{item}}" mode="aspectFill"></image>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-card mt-24 panel-card">
+      <section-header title="保存前检查" caption="避免默认身份进入家庭分享和邀请场景" chip="Check"></section-header>
+      <view class="summary-grid mt-24">
+        <summary-stat value="{{nickName ? '已填写' : '缺失'}}" label="昵称状态"></summary-stat>
+        <summary-stat value="{{avatarUrl ? '已设置' : '可选'}}" label="头像状态"></summary-stat>
+      </view>
+      <view class="quick-actions mt-24">
+        <button class="btn-primary quick-actions__item" loading="{{saving}}" bindtap="saveProfile">保存资料</button>
+      </view>
+    </view>
+  </block>
+</view>

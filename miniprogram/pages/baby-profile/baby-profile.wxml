@@ -1,45 +1,29 @@
 <view class="page">
-  <view class="hero-card hero-card--baby-profile">
-    <view class="hero-backdrop hero-backdrop--baby"></view>
-    <view class="hero-topline">
-      <view class="chip">宝宝档案</view>
-      <view class="hero-accent">PROFILE</view>
-    </view>
-    <view class="page-title mt-24">统一管理档案</view>
-    <view class="page-subtitle mt-16">v0.1 默认单宝宝记录，但这里保留后续多宝宝切换入口，当前档案会决定上传和时间轴的归属。</view>
-  </view>
+  <ui-hero
+    extra-class="hero-card--baby-profile"
+    chip="宝宝档案"
+    accent="PROFILE"
+    kicker="保留当前单宝宝优先的产品策略，同时为后续多档案切换预留管理位。"
+    title="统一管理成长档案"
+    subtitle="当前档案会决定上传和时间轴的归属，切换入口不再埋得太深。"
+  ></ui-hero>
 
   <block wx:if="{{isLoading}}">
-    <view class="section-card mt-24 status-card">
-      <view class="loading-dots">
-        <view class="loading-dots__item"></view>
-        <view class="loading-dots__item"></view>
-        <view class="loading-dots__item"></view>
-      </view>
-      <view class="status-card__title">正在读取宝宝档案</view>
-      <view class="status-card__desc">正在加载当前用户可访问的宝宝列表。</view>
-    </view>
+    <status-card extra-class="mt-24" loading="{{true}}" title="正在读取宝宝档案" desc="正在加载当前用户可访问的宝宝列表。"></status-card>
   </block>
 
   <block wx:elif="{{loadError}}">
-    <view class="section-card mt-24 status-card">
-      <view class="status-card__title">档案页暂时不可用</view>
-      <view class="status-card__desc">{{loadError}}</view>
+    <status-card extra-class="mt-24" title="档案页暂时不可用" desc="{{loadError}}">
       <view class="status-card__actions">
         <button class="btn-secondary" bindtap="retryLoad">重新加载</button>
       </view>
-    </view>
+    </status-card>
   </block>
 
   <block wx:elif="{{babies.length}}">
     <view class="section-card mt-24 archive-note-card">
-      <view class="section-header">
-        <view>
-          <view class="section-title">当前规则</view>
-          <view class="section-caption mt-16">上传和时间轴都使用当前档案作为写入目标</view>
-        </view>
-        <view class="chip">{{babies.length}} 个档案</view>
-      </view>
+      <section-header title="当前规则" caption="当前档案决定上传归属、时间轴默认数据源和成员管理对象" chip="{{babies.length}} 个档案"></section-header>
+      <view class="info-band mt-24">切换前先确认目标档案，避免把照片上传到错误宝宝名下。</view>
     </view>
 
     <view class="baby-list mt-24">
@@ -52,18 +36,23 @@
           <view class="chip baby-card__status">{{item.isCurrent ? '当前档案' : '可切换'}}</view>
         </view>
         <view class="baby-card__detail mt-24">
-          <view class="baby-card__tag">{{item.gender === 'male' ? '男宝宝' : item.gender === 'female' ? '女宝宝' : '未设置性别'}}</view>
-          <view class="baby-card__tag baby-card__tag--soft">生日用于年龄和时间轴阶段计算</view>
+          <view class="pill">{{item.gender === 'male' ? '男宝宝' : item.gender === 'female' ? '女宝宝' : '未设置性别'}}</view>
+          <view class="pill">{{item.roleLabel}}</view>
+          <view class="pill">{{item.memberCount}} 位家庭成员</view>
+          <view class="pill">{{item.photoCount}} 张照片</view>
+          <view class="pill">{{item.canUpload ? '可上传内容' : '仅可查看内容'}}</view>
+        </view>
+        <view class="baby-card__summary mt-24">
+          <summary-stat extra-class="baby-card__summary-item" value="{{item.ageLabel}}" label="当前年龄"></summary-stat>
+          <summary-stat extra-class="baby-card__summary-item" value="{{item.lastPhotoDateLabel}}" label="最近照片日期"></summary-stat>
         </view>
         <button class="{{item.isCurrent ? 'btn-secondary baby-card__button baby-card__button--disabled' : 'btn-primary baby-card__button'}} mt-24" data-id="{{item._id}}" data-current="{{item.isCurrent}}" disabled="{{item.isCurrent}}" bindtap="selectBaby">{{item.isCurrent ? '当前使用中' : '设为当前档案'}}</button>
       </view>
     </view>
   </block>
+
   <block wx:else>
-    <view class="section-card mt-24 empty-state onboarding-card">
-      <view class="empty-state__title">还没有档案</view>
-      <view class="empty-state__desc">创建后可直接从首页开始上传照片，并进入按月份回看的时间轴。</view>
-    </view>
+    <empty-state-panel extra-class="mt-24" icon-name="baby" title="还没有档案" desc="创建后可直接从首页开始上传照片，并进入按月份回看的时间轴。"></empty-state-panel>
   </block>
 
   <button wx:if="{{!isLoading && !loadError}}" class="btn-primary mt-32" bindtap="createBaby">新建宝宝档案</button>

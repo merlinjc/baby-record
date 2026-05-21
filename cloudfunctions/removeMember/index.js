@@ -24,7 +24,7 @@ exports.main = async (event) => {
 
     const member = (baby.members || []).find((item) => item.userId === userId)
 
-    if (!member || member.role === 'creator') {
+    if (!member || member.role === 'creator' || userId === wxContext.OPENID) {
       return {
         code: -1,
         message: '该成员不可移除'

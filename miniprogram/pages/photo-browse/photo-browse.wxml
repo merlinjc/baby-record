@@ -1,73 +1,43 @@
 <view class="page">
-  <view class="hero-card hero-card--browse">
-    <view class="hero-backdrop hero-backdrop--browse"></view>
-    <view class="hero-topline">
-      <view class="chip">照片流</view>
-      <view class="hero-accent">BROWSE</view>
-    </view>
-    <view class="page-title mt-24">连续浏览成长记录</view>
-    <view class="page-subtitle mt-16">{{currentBaby ? currentBaby.name + ' 的照片按时间倒序分页加载，优先满足 PRD 的照片浏览体验。' : '先创建档案，再进入照片流浏览成长记录。'}}</view>
+  <ui-hero
+    extra-class="hero-card--browse"
+    chip="照片流"
+    accent="BROWSE"
+    kicker="持续浏览和快速筛选分开处理，优先保证可读性和滚动效率。"
+    title="连续浏览成长记录"
+    subtitle="{{currentBaby ? currentBaby.name + ' 的照片按时间倒序分页加载，可结合地点筛选快速定位。' : '先创建档案，再进入照片流浏览成长记录。'}}"
+  >
     <view wx:if="{{!isLoading && currentBaby}}" class="summary-grid mt-24">
-      <view class="summary-tile">
-        <view class="summary-value">{{photos.length}}</view>
-        <view class="summary-label">当前已加载</view>
-      </view>
-      <view class="summary-tile">
-        <view class="summary-value">{{total}}</view>
-        <view class="summary-label">全部照片</view>
-      </view>
+      <summary-stat value="{{photos.length}}" label="当前已加载"></summary-stat>
+      <summary-stat value="{{total}}" label="全部照片"></summary-stat>
     </view>
-  </view>
+  </ui-hero>
 
   <block wx:if="{{isLoading}}">
-    <view class="section-card mt-24 status-card">
-      <view class="loading-dots">
-        <view class="loading-dots__item"></view>
-        <view class="loading-dots__item"></view>
-        <view class="loading-dots__item"></view>
-      </view>
-      <view class="status-card__title">正在整理照片流</view>
-      <view class="status-card__desc">按时间倒序读取照片，准备瀑布流展示。</view>
-    </view>
+    <status-card extra-class="mt-24" loading="{{true}}" title="正在整理照片流" desc="按时间倒序读取照片，准备瀑布流展示。"></status-card>
   </block>
 
   <block wx:elif="{{loadError}}">
-    <view class="section-card mt-24 status-card">
-      <view class="status-card__title">照片流暂时不可用</view>
-      <view class="status-card__desc">{{loadError}}</view>
+    <status-card extra-class="mt-24" title="照片流暂时不可用" desc="{{loadError}}">
       <view class="status-card__actions">
         <button class="btn-secondary" bindtap="retryLoad">重新加载</button>
       </view>
-    </view>
+    </status-card>
   </block>
 
   <block wx:elif="{{!currentBaby}}">
-    <view class="section-card mt-24 empty-state onboarding-card">
-      <view class="empty-state__title">先创建一个宝宝档案</view>
-      <view class="empty-state__desc">照片流依赖当前档案，创建后可持续按分页浏览所有照片。</view>
+    <empty-state-panel extra-class="mt-24" icon-name="badge-plus" title="先创建一个宝宝档案" desc="照片流依赖当前档案，创建后可持续按分页浏览所有照片。">
       <button class="btn-primary mt-24" bindtap="goCreateBaby">创建档案</button>
-    </view>
+    </empty-state-panel>
   </block>
 
   <block wx:elif="{{photos.length}}">
     <view class="section-card mt-24 browse-note-card">
-      <view class="section-header">
-        <view>
-          <view class="section-title">浏览方式</view>
-          <view class="section-caption mt-16">{{activeLocation ? '当前按地点筛选展示，地点：' + activeLocation : '滚动到底部会继续按页加载，每页 ' + pageSize + ' 张'}}</view>
-        </view>
-        <view class="chip">倒序浏览</view>
-      </view>
+      <section-header title="浏览方式" caption="{{activeLocation ? '当前按地点筛选展示，地点：' + activeLocation : '滚动到底部会继续按页加载，每页 ' + pageSize + ' 张'}}" chip="倒序浏览"></section-header>
     </view>
 
-    <view wx:if="{{locationOptions.length}}" class="section-card mt-24 browse-note-card">
-      <view class="section-header">
-        <view>
-          <view class="section-title">地点筛选</view>
-          <view class="section-caption mt-16">支持按手动标注的地点快速筛选照片</view>
-        </view>
-        <view class="chip">Location</view>
-      </view>
+    <view wx:if="{{locationOptions.length}}" class="filter-shell mt-24">
+      <section-header title="地点筛选" caption="支持按手动标注的地点快速筛选照片" chip="Location"></section-header>
       <scroll-view scroll-x class="location-filter-scroll mt-24">
         <view class="location-filter-row">
           <view class="location-chip {{!activeLocation ? 'location-chip--active' : ''}}" data-value="" bindtap="changeLocation">全部</view>
@@ -78,38 +48,18 @@
 
     <view class="waterfall-grid mt-24">
       <view class="waterfall-column" wx:for="{{waterfallColumns}}" wx:key="*this">
-        <view class="photo-card" wx:for="{{item}}" wx:key="_id" data-id="{{item._id}}" bindtap="openPhotoDetail">
-          <image class="photo-card__image" style="{{item.imageStyle}}" src="{{item.filePath}}" mode="aspectFill" lazy-load="{{true}}"></image>
-          <view class="photo-card__body">
-            <view class="photo-card__date">{{item.photoDate}}</view>
-            <view class="photo-card__desc">{{item.description || '未添加描述'}}</view>
-            <view class="photo-card__hint">点击查看详情</view>
-          </view>
-        </view>
+        <photo-entry-card wx:for="{{item}}" wx:key="_id" photo="{{item}}" bind:tap="openPhotoDetail"></photo-entry-card>
       </view>
     </view>
 
-    <view wx:if="{{isLoadingMore}}" class="section-card mt-24 status-card">
-      <view class="loading-dots">
-        <view class="loading-dots__item"></view>
-        <view class="loading-dots__item"></view>
-        <view class="loading-dots__item"></view>
-      </view>
-      <view class="status-card__title">正在加载更多照片</view>
-      <view class="status-card__desc">继续下滑可逐页浏览。</view>
-    </view>
+    <status-card wx:if="{{isLoadingMore}}" extra-class="mt-24" loading="{{true}}" title="正在加载更多照片" desc="继续下滑可逐页浏览。"></status-card>
 
-    <view wx:elif="{{!hasMore}}" class="section-card mt-24 status-card status-card--compact">
-      <view class="status-card__title">已经到底了</view>
-      <view class="status-card__desc">全部 {{total}} 张照片都已展示。</view>
-    </view>
+    <status-card wx:elif="{{!hasMore}}" extra-class="mt-24" compact="{{true}}" title="已经到底了" desc="全部 {{total}} 张照片都已展示。"></status-card>
   </block>
 
   <block wx:else>
-    <view class="section-card mt-24 empty-state onboarding-card">
-      <view class="empty-state__title">还没有照片</view>
-      <view class="empty-state__desc">先上传第一批成长照片，照片流会按时间倒序持续加载。</view>
+    <empty-state-panel extra-class="mt-24" icon-name="images" title="还没有照片" desc="先上传第一批成长照片，照片流会按时间倒序持续加载。">
       <button class="btn-primary mt-24" bindtap="goUpload">去上传照片</button>
-    </view>
+    </empty-state-panel>
   </block>
 </view>

@@ -1,0 +1,27 @@
+<view class="hero-card {{extraClass}}">
+  <block wx:if="{{showOrbs}}">
+    <view class="hero-orb hero-orb--lg"></view>
+    <view class="hero-orb hero-orb--md"></view>
+  </block>
+  <view class="hero-topline">
+  <block wx:if="{{chip}}">
+    <view class="chip">{{chip}}</view>
+  </block>
+  <slot name="topline-prefix"></slot>
+  <block wx:if="{{accent}}">
+    <view class="hero-accent">{{accent}}</view>
+  </block>
+  <slot name="topline-suffix"></slot>
+</view>
+<block wx:if="{{kicker}}">
+  <view class="hero-kicker mt-20">{{kicker}}</view>
+</block>
+  <slot name="kicker-extra"></slot>
+<block wx:if="{{title}}">
+  <view class="page-title mt-24">{{title}}</view>
+</block>
+<block wx:if="{{subtitle}}">
+  <view class="page-subtitle mt-16">{{subtitle}}</view>
+</block>
+  <slot></slot>
+</view>

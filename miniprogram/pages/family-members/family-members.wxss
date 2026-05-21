@@ -1,29 +1,39 @@
 .hero-card--family {
-  background: linear-gradient(145deg, #fff8ed, #f5ebdf 56%, #ead6bf 100%);
+  background: linear-gradient(145deg, #fff8ef, #f4e4d6 56%, #e6c3a7 100%);
 }
 
 .family-card {
-  background: linear-gradient(180deg, #fffdf9, #fff5e8);
+  background: linear-gradient(180deg, rgba(255, 253, 249, 0.97), rgba(255, 245, 232, 0.98));
+  border: 2rpx solid rgba(229, 205, 178, 0.45);
+}
+
+.family-card--readonly {
+  opacity: 0.94;
 }
 
 .member-list {
   display: flex;
   flex-direction: column;
-  gap: 16rpx;
+  gap: 20rpx;
 }
 
 .member-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 20rpx;
-  padding: 20rpx 24rpx;
-  border-radius: 18rpx;
-  background: #fffaf3;
+  padding: 24rpx;
+  border-radius: 24rpx;
+  background: linear-gradient(180deg, #fffaf3, #fff4e8);
+  border: 2rpx solid rgba(234, 216, 192, 0.55);
 }
 
 .member-item__main {
   flex: 1;
+}
+
+.member-item__side {
+  min-width: 160rpx;
 }
 
 .member-item__title {
@@ -31,6 +41,14 @@
   font-weight: 700;
 }
 
+.member-item__role {
+  display: inline-flex;
+}
+
 .member-item__button {
   min-width: 160rpx;
+}
+
+.invite-summary__tile {
+  min-width: 100%;
 }

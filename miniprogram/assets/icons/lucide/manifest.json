@@ -1,0 +1,206 @@
+[
+  {
+    "icon": "house",
+    "variant": "active",
+    "color": "#8B4513",
+    "output": "miniprogram/assets/icons/lucide/house-active.png"
+  },
+  {
+    "icon": "house",
+    "variant": "inactive",
+    "color": "#8D6E63",
+    "output": "miniprogram/assets/icons/lucide/house-inactive.png"
+  },
+  {
+    "icon": "calendar-range",
+    "variant": "active",
+    "color": "#8B4513",
+    "output": "miniprogram/assets/icons/lucide/calendar-range-active.png"
+  },
+  {
+    "icon": "calendar-range",
+    "variant": "inactive",
+    "color": "#8D6E63",
+    "output": "miniprogram/assets/icons/lucide/calendar-range-inactive.png"
+  },
+  {
+    "icon": "circle-user-round",
+    "variant": "active",
+    "color": "#8B4513",
+    "output": "miniprogram/assets/icons/lucide/circle-user-round-active.png"
+  },
+  {
+    "icon": "circle-user-round",
+    "variant": "inactive",
+    "color": "#8D6E63",
+    "output": "miniprogram/assets/icons/lucide/circle-user-round-inactive.png"
+  },
+  {
+    "icon": "images",
+    "variant": "active",
+    "color": "#8B4513",
+    "output": "miniprogram/assets/icons/lucide/images-active.png"
+  },
+  {
+    "icon": "images",
+    "variant": "inactive",
+    "color": "#B0835F",
+    "output": "miniprogram/assets/icons/lucide/images-inactive.png"
+  },
+  {
+    "icon": "image-plus",
+    "variant": "active",
+    "color": "#8B4513",
+    "output": "miniprogram/assets/icons/lucide/image-plus-active.png"
+  },
+  {
+    "icon": "image-plus",
+    "variant": "inactive",
+    "color": "#B0835F",
+    "output": "miniprogram/assets/icons/lucide/image-plus-inactive.png"
+  },
+  {
+    "icon": "baby",
+    "variant": "active",
+    "color": "#8B4513",
+    "output": "miniprogram/assets/icons/lucide/baby-active.png"
+  },
+  {
+    "icon": "baby",
+    "variant": "inactive",
+    "color": "#B0835F",
+    "output": "miniprogram/assets/icons/lucide/baby-inactive.png"
+  },
+  {
+    "icon": "users-round",
+    "variant": "active",
+    "color": "#8B4513",
+    "output": "miniprogram/assets/icons/lucide/users-round-active.png"
+  },
+  {
+    "icon": "users-round",
+    "variant": "inactive",
+    "color": "#B0835F",
+    "output": "miniprogram/assets/icons/lucide/users-round-inactive.png"
+  },
+  {
+    "icon": "trash-2",
+    "variant": "active",
+    "color": "#C62828",
+    "output": "miniprogram/assets/icons/lucide/trash-2-active.png"
+  },
+  {
+    "icon": "trash-2",
+    "variant": "inactive",
+    "color": "#B0835F",
+    "output": "miniprogram/assets/icons/lucide/trash-2-inactive.png"
+  },
+  {
+    "icon": "message-square-heart",
+    "variant": "active",
+    "color": "#8B4513",
+    "output": "miniprogram/assets/icons/lucide/message-square-heart-active.png"
+  },
+  {
+    "icon": "message-square-heart",
+    "variant": "inactive",
+    "color": "#B0835F",
+    "output": "miniprogram/assets/icons/lucide/message-square-heart-inactive.png"
+  },
+  {
+    "icon": "badge-plus",
+    "variant": "active",
+    "color": "#8B4513",
+    "output": "miniprogram/assets/icons/lucide/badge-plus-active.png"
+  },
+  {
+    "icon": "badge-plus",
+    "variant": "inactive",
+    "color": "#B0835F",
+    "output": "miniprogram/assets/icons/lucide/badge-plus-inactive.png"
+  },
+  {
+    "icon": "user-round-pen",
+    "variant": "active",
+    "color": "#8B4513",
+    "output": "miniprogram/assets/icons/lucide/user-round-pen-active.png"
+  },
+  {
+    "icon": "user-round-pen",
+    "variant": "inactive",
+    "color": "#B0835F",
+    "output": "miniprogram/assets/icons/lucide/user-round-pen-inactive.png"
+  },
+  {
+    "icon": "shield-check",
+    "variant": "active",
+    "color": "#8B4513",
+    "output": "miniprogram/assets/icons/lucide/shield-check-active.png"
+  },
+  {
+    "icon": "shield-check",
+    "variant": "inactive",
+    "color": "#B0835F",
+    "output": "miniprogram/assets/icons/lucide/shield-check-inactive.png"
+  },
+  {
+    "icon": "map-pinned",
+    "variant": "active",
+    "color": "#8B4513",
+    "output": "miniprogram/assets/icons/lucide/map-pinned-active.png"
+  },
+  {
+    "icon": "map-pinned",
+    "variant": "inactive",
+    "color": "#B0835F",
+    "output": "miniprogram/assets/icons/lucide/map-pinned-inactive.png"
+  },
+  {
+    "icon": "text",
+    "variant": "active",
+    "color": "#8B4513",
+    "output": "miniprogram/assets/icons/lucide/text-active.png"
+  },
+  {
+    "icon": "text",
+    "variant": "inactive",
+    "color": "#B0835F",
+    "output": "miniprogram/assets/icons/lucide/text-inactive.png"
+  },
+  {
+    "icon": "clock-3",
+    "variant": "active",
+    "color": "#8B4513",
+    "output": "miniprogram/assets/icons/lucide/clock-3-active.png"
+  },
+  {
+    "icon": "clock-3",
+    "variant": "inactive",
+    "color": "#B0835F",
+    "output": "miniprogram/assets/icons/lucide/clock-3-inactive.png"
+  },
+  {
+    "icon": "download",
+    "variant": "active",
+    "color": "#8B4513",
+    "output": "miniprogram/assets/icons/lucide/download-active.png"
+  },
+  {
+    "icon": "download",
+    "variant": "inactive",
+    "color": "#B0835F",
+    "output": "miniprogram/assets/icons/lucide/download-inactive.png"
+  },
+  {
+    "icon": "user-round-check",
+    "variant": "active",
+    "color": "#8B4513",
+    "output": "miniprogram/assets/icons/lucide/user-round-check-active.png"
+  },
+  {
+    "icon": "user-round-check",
+    "variant": "inactive",
+    "color": "#B0835F",
+    "output": "miniprogram/assets/icons/lucide/user-round-check-inactive.png"
+  }
+]

@@ -1,88 +1,54 @@
 <view class="page">
-  <view class="hero-card hero-card--timeline">
-    <view class="hero-backdrop hero-backdrop--soft"></view>
-    <view class="hero-topline">
-      <view class="chip">时间回顾</view>
-      <view class="hero-accent">TIMELINE</view>
-    </view>
-    <view class="page-title mt-24">按时间回看</view>
-    <view class="page-subtitle mt-16">{{currentBaby ? currentBaby.name + ' 的照片支持按年、月、日切换查看，便于快速定位成长阶段。' : '先创建档案，再把照片自动沉淀到时间轴。'}}</view>
+  <ui-hero
+    extra-class="hero-card--timeline"
+    chip="时间回顾"
+    accent="TIMELINE"
+    kicker="按年、月、日切换查看，把成长记录沉淀成更稳定的检索路径。"
+    title="按时间回看成长记录"
+    subtitle="{{currentBaby ? currentBaby.name + ' 的照片支持按年、月、日分组查看，便于快速定位成长阶段。' : '先创建档案，再把照片自动沉淀到时间轴。'}}"
+  >
     <view wx:if="{{!isLoading && groups.length}}" class="summary-grid mt-24">
-      <view class="summary-tile">
-        <view class="summary-value">{{monthCount}}</view>
-        <view class="summary-label">当前分组数</view>
-      </view>
-      <view class="summary-tile">
-        <view class="summary-value">{{totalPhotos}}</view>
-        <view class="summary-label">累计照片</view>
-      </view>
+      <summary-stat value="{{monthCount}}" label="当前分组数"></summary-stat>
+      <summary-stat value="{{totalPhotos}}" label="累计照片"></summary-stat>
     </view>
-  </view>
+  </ui-hero>
 
-  <view class="timeline-filter mt-24">
-    <view class="timeline-filter__label">时间筛选</view>
-    <view class="timeline-filter__tabs mt-16">
+  <view class="filter-shell mt-24">
+    <section-header title="时间筛选" caption="切换聚合粒度，优先满足快速定位和阶段回顾" chip="{{activeGroupBy === 'year' ? '按年' : activeGroupBy === 'month' ? '按月' : '按日'}}"></section-header>
+    <view class="timeline-filter__tabs mt-24">
       <view wx:for="{{filterOptions}}" wx:key="value" class="timeline-filter__tab {{activeGroupBy === item.value ? 'timeline-filter__tab--active' : ''}}" data-value="{{item.value}}" bindtap="changeGroupBy">{{item.label}}</view>
     </view>
   </view>
 
   <block wx:if="{{isLoading}}">
-    <view class="section-card mt-24 status-card">
-      <view class="loading-dots">
-        <view class="loading-dots__item"></view>
-        <view class="loading-dots__item"></view>
-        <view class="loading-dots__item"></view>
-      </view>
-      <view class="status-card__title">正在生成时间轴</view>
-      <view class="status-card__desc">按 {{activeGroupBy === 'year' ? '年份' : activeGroupBy === 'month' ? '月份' : '日期'}} 整理照片，需要一点时间。</view>
-    </view>
+    <status-card extra-class="mt-24" loading="{{true}}" title="正在生成时间轴" desc="按 {{activeGroupBy === 'year' ? '年份' : activeGroupBy === 'month' ? '月份' : '日期'}} 整理照片，需要一点时间。"></status-card>
   </block>
 
   <block wx:elif="{{loadError}}">
-    <view class="section-card mt-24 status-card">
-      <view class="status-card__title">时间轴暂时不可用</view>
-      <view class="status-card__desc">{{loadError}}</view>
+    <status-card extra-class="mt-24" title="时间轴暂时不可用" desc="{{loadError}}">
       <view class="status-card__actions">
         <button class="btn-secondary" bindtap="retryLoad">重新加载</button>
       </view>
-    </view>
+    </status-card>
   </block>
 
   <block wx:elif="{{groups.length}}">
     <view class="timeline-list mt-24">
-      <view class="timeline-card" wx:for="{{groups}}" wx:key="key">
-        <view class="timeline-card__header">
-          <view class="timeline-card__meta">
-            <view class="timeline-card__title">{{item.label}}</view>
-            <view class="section-caption mt-16">{{item.count}} 张照片</view>
-          </view>
-          <image class="timeline-card__cover" src="{{item.cover}}" mode="aspectFill"></image>
-        </view>
-        <scroll-view scroll-x class="timeline-card__strip">
-          <view class="timeline-strip__inner">
-            <view class="timeline-photo" wx:for="{{item.photos}}" wx:key="_id" data-id="{{item._id}}" bindtap="openPhotoDetail">
-              <image class="timeline-photo__image" src="{{item.filePath}}" mode="aspectFill" lazy-load="{{true}}"></image>
-              <view class="timeline-photo__label">{{item.photoDate}}</view>
-            </view>
-          </view>
-        </scroll-view>
-      </view>
+      <timeline-group-card wx:for="{{groups}}" wx:key="key" group="{{item}}" bind:phototap="openPhotoDetail"></timeline-group-card>
     </view>
   </block>
+
   <block wx:elif="{{!hasBaby}}">
-    <view class="section-card mt-24 empty-state onboarding-card">
-      <view class="empty-state__title">还没有宝宝档案</view>
-      <view class="empty-state__desc">时间轴依赖当前档案，先创建一个宝宝档案，再开始沉淀照片记录。</view>
+    <empty-state-panel extra-class="mt-24" icon-name="badge-plus" title="还没有宝宝档案" desc="时间轴依赖当前档案，先创建一个宝宝档案，再开始沉淀照片记录。">
       <view class="status-inline">先建档，再上传照片</view>
       <button class="btn-primary mt-24" bindtap="goCreateBaby">创建档案</button>
-    </view>
+    </empty-state-panel>
   </block>
+
   <block wx:else>
-    <view class="section-card mt-24 empty-state onboarding-card">
-      <view class="empty-state__title">时间轴还是空的</view>
-      <view class="empty-state__desc">上传照片后，这里会自动按 {{activeGroupBy === 'year' ? '年份' : activeGroupBy === 'month' ? '月份' : '日期'}} 展示。</view>
+    <empty-state-panel extra-class="mt-24" icon-name="calendar-range" title="时间轴还是空的" desc="上传照片后，这里会自动按 {{activeGroupBy === 'year' ? '年份' : activeGroupBy === 'month' ? '月份' : '日期'}} 展示。">
       <view class="status-inline">先完成第一次上传</view>
       <button class="btn-primary mt-24" bindtap="goUpload">去上传照片</button>
-    </view>
+    </empty-state-panel>
   </block>
 </view>

@@ -1,0 +1,15 @@
+<view class="section-header">
+  <view>
+    <block wx:if="{{title}}">
+      <view class="section-title">{{title}}</view>
+    </block>
+    <block wx:if="{{caption}}">
+      <view class="section-caption mt-16">{{caption}}</view>
+    </block>
+    <slot name="caption-extra"></slot>
+  </view>
+  <block wx:if="{{chip}}">
+    <view class="chip">{{chip}}</view>
+  </block>
+  <slot name="suffix"></slot>
+</view>

@@ -47,17 +47,41 @@ async function ensureUser() {
 
 exports.main = async () => {
   try {
-    const { wxContext } = await ensureUser()
-    const result = await db.collection('baby_profiles').where({
-      members: db.command.elemMatch({
-        userId: wxContext.OPENID
-      })
-    }).orderBy('createTime', 'desc').get()
+    const { user } = await ensureUser()
+    const accessibleIds = user.babyProfiles || []
+
+    if (!accessibleIds.length) {
+      return {
+        code: 0,
+        message: '获取成功',
+        data: []
+      }
+    }
+
+    const pageSize = 100
+    let skip = 0
+    let hasMore = true
+    let allBabies = []
+
+    while (hasMore) {
+      const result = await db.collection('baby_profiles').where({
+        _id: db.command.in(accessibleIds)
+      }).orderBy('createTime', 'desc').skip(skip).limit(pageSize).get()
+
+      const currentBatch = result.data || []
+      allBabies = allBabies.concat(currentBatch)
+      hasMore = currentBatch.length === pageSize
+      skip += currentBatch.length
+    }
+
+    const sorted = allBabies.sort((left, right) => {
+      return accessibleIds.indexOf(right._id) - accessibleIds.indexOf(left._id)
+    })
 
     return {
       code: 0,
       message: '获取成功',
-      data: result.data || []
+      data: sorted
     }
   } catch (error) {
     return {

@@ -1,0 +1,18 @@
+<view class="timeline-card">
+  <view class="timeline-card__header">
+    <view class="timeline-card__meta">
+      <view class="section-title">{{group.label}}</view>
+      <view class="section-caption mt-16">{{group.count}} 张照片</view>
+    </view>
+    <image class="timeline-card__cover" src="{{group.cover}}" mode="aspectFill"></image>
+  </view>
+
+  <scroll-view scroll-x class="timeline-card__strip">
+    <view class="timeline-strip__inner">
+      <view class="timeline-photo" wx:for="{{group.photos}}" wx:key="_id" data-id="{{item._id}}" bindtap="handlePhotoTap">
+        <image class="timeline-photo__image" src="{{item.filePath}}" mode="aspectFill" lazy-load="{{true}}"></image>
+        <view class="timeline-photo__label">{{item.photoDate}}</view>
+      </view>
+    </view>
+  </scroll-view>
+</view>

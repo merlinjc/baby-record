@@ -1,27 +1,49 @@
+function resolveSelectedIndex(list) {
+  const pages = getCurrentPages()
+  const currentPage = pages[pages.length - 1]
+
+  if (!currentPage) {
+    return 0
+  }
+
+  const currentPath = '/' + currentPage.route
+  const selected = list.findIndex((item) => item.pagePath === currentPath)
+  return selected >= 0 ? selected : 0
+}
+
 Component({
   data: {
     selected: 0,
-    color: '#8D6E63',
-    selectedColor: '#8B4513',
     list: [
       {
         pagePath: '/pages/index/index',
-        text: '首页'
+        text: '首页',
+        iconName: 'house'
       },
       {
         pagePath: '/pages/photo-time/photo-time',
-        text: '时间轴'
+        text: '时间轴',
+        iconName: 'calendar-range'
       },
       {
         pagePath: '/pages/profile/profile',
-        text: '我的'
+        text: '我的',
+        iconName: 'circle-user-round'
       }
     ]
   },
 
   methods: {
+    syncSelected() {
+      this.setData({
+        selected: resolveSelectedIndex(this.data.list)
+      })
+    },
+
     switchTab(event) {
-      const { path, index } = event.currentTarget.dataset
+      const detail = event.detail || {}
+      const path = detail.path
+      const index = detail.index
 
       if (!path) {
         return
@@ -34,12 +56,17 @@ Component({
 
   lifetimes: {
     attached() {
-      const pages = getCurrentPages()
-      const currentPage = pages[pages.length - 1]
-      const currentPath = '/' + currentPage.route
-      const selected = this.data.list.findIndex((item) => item.pagePath === currentPath)
+      this.syncSelected()
+    },
 
-      this.setData({ selected: selected >= 0 ? selected : 0 })
+    ready() {
+      this.syncSelected()
+    }
+  },
+
+  pageLifetimes: {
+    show() {
+      this.syncSelected()
     }
   }
 })

@@ -1,5 +1,5 @@
 .hero-card--detail {
-  background: linear-gradient(180deg, #fffdf8, #fff3e4);
+  background: linear-gradient(145deg, #fff8ef, #f4e3d6 56%, #e9c5a7 100%);
 }
 
 .detail-topline {
@@ -16,13 +16,19 @@
 
 .detail-panel {
   padding: 24rpx;
-  border-radius: 20rpx;
-  background: #fffaf3;
+  border-radius: 24rpx;
+  background: linear-gradient(180deg, #fffaf3, #fff4e8);
+  border: 2rpx solid rgba(232, 209, 184, 0.5);
 }
 
-.detail-date {
-  font-size: 24rpx;
-  color: #8d6e63;
+.detail-meta-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.detail-meta-card {
+  min-width: 220rpx;
 }
 
 .detail-desc {
@@ -30,16 +36,25 @@
   line-height: 1.6;
 }
 
-.detail-meta {
-  color: #8d6e63;
-  line-height: 1.6;
-}
-
 .detail-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 16rpx;
 }
 
 .detail-actions__item {
   flex: 1;
+}
+
+.detail-actions__item--danger {
+  background: linear-gradient(180deg, rgba(254, 240, 236, 0.96), rgba(250, 223, 217, 0.98));
+  border-color: rgba(228, 144, 128, 0.34);
+}
+
+.detail-actions__item--danger .action-card__title {
+  color: #a63d2f;
+}
+
+.detail-actions__item--danger .action-card__desc {
+  color: #b26a5f;
 }

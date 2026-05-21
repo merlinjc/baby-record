@@ -1,0 +1,4 @@
+<view class="summary-tile {{extraClass}}">
+  <view class="summary-value">{{value}}</view>
+  <view class="summary-label">{{label}}</view>
+</view>

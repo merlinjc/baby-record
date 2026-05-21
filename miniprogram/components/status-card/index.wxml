@@ -1,0 +1,14 @@
+<view class="section-card status-card {{compact ? 'status-card--compact' : ''}} {{extraClass}}">
+  <view wx:if="{{loading}}" class="loading-dots">
+    <view class="loading-dots__item"></view>
+    <view class="loading-dots__item"></view>
+    <view class="loading-dots__item"></view>
+  </view>
+  <block wx:if="{{title}}">
+    <view class="status-card__title">{{title}}</view>
+  </block>
+  <block wx:if="{{desc}}">
+    <view class="status-card__desc">{{desc}}</view>
+  </block>
+  <slot></slot>
+</view>

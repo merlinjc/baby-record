@@ -1,94 +1,106 @@
-const { ensureUser } = require('../_shared/auth')
+const { ensureUser, normalizeMemberRole } = require('../_shared/auth')
 const { db } = require('../_shared/db')
+
+function normalizeInviteCode(code) {
+  return String(code || '').trim().toUpperCase()
+}
 
 exports.main = async (event) => {
   try {
     const { user, wxContext } = await ensureUser()
-    const { token } = event
+    const inviteCode = normalizeInviteCode(event.code || event.inviteCode)
+    const token = String(event.token || '').trim()
 
-    if (!token) {
+    if (!inviteCode && !token) {
       return {
         code: -1,
-        message: 'token 不能为空'
+        message: '邀请码不能为空'
       }
     }
 
-    const invitationResult = await db.collection('invitations').where({
-      token,
-      status: 'pending'
-    }).limit(1).get()
-    const invitation = (invitationResult.data || [])[0]
+    const result = await db.runTransaction(async (transaction) => {
+      const wherePayload = inviteCode
+        ? { inviteCode, status: 'pending' }
+        : { token, status: 'pending' }
 
-    if (!invitation) {
-      return {
-        code: -1,
-        message: '邀请不存在或已失效'
+      const invitationResult = await transaction.collection('invitations').where(wherePayload).limit(1).get()
+      const invitation = (invitationResult.data || [])[0]
+
+      if (!invitation) {
+        throw new Error('邀请码不存在、已失效或已被使用')
       }
-    }
 
-    if (new Date(invitation.expiresAt).getTime() < Date.now()) {
-      return {
-        code: -1,
-        message: '邀请已过期'
+      if (new Date(invitation.expiresAt).getTime() < Date.now()) {
+        await transaction.collection('invitations').doc(invitation._id).update({
+          data: {
+            status: 'expired',
+            updateTime: db.serverDate()
+          }
+        })
+        throw new Error('邀请码已过期')
       }
-    }
 
-    const babyResult = await db.collection('baby_profiles').doc(invitation.babyId).get()
-    const baby = babyResult.data
+      const safeRole = normalizeMemberRole(invitation.role)
+      const babyResult = await transaction.collection('baby_profiles').doc(invitation.babyId).get()
+      const baby = babyResult.data
 
-    if (!baby) {
-      return {
-        code: -1,
-        message: '宝宝档案不存在'
+      if (!baby) {
+        throw new Error('宝宝档案不存在')
       }
-    }
 
-    const members = baby.members || []
-    const memberExists = members.some((member) => member.userId === wxContext.OPENID)
-
-    if (!memberExists) {
-      members.push({
+      const members = baby.members || []
+      const memberExists = members.some((member) => member.userId === wxContext.OPENID)
+      const nextMembers = memberExists ? members : members.concat({
         userId: wxContext.OPENID,
-        role: invitation.role || 'member',
+        role: safeRole,
         relationship: invitation.relationship || '',
         joinTime: db.serverDate()
       })
 
-      await db.collection('baby_profiles').doc(invitation.babyId).update({
+      const babyProfiles = user.babyProfiles || []
+      const nextBabyProfiles = babyProfiles.includes(invitation.babyId)
+        ? babyProfiles
+        : babyProfiles.concat(invitation.babyId)
+
+      await transaction.collection('invitations').doc(invitation._id).update({
         data: {
-          members,
+          status: 'accepted',
+          acceptedBy: wxContext.OPENID,
+          acceptedTime: db.serverDate(),
           updateTime: db.serverDate()
         }
       })
-    }
 
-    const babyProfiles = user.babyProfiles || []
-    if (!babyProfiles.includes(invitation.babyId)) {
-      await db.collection('users').doc(user._id).update({
-        data: {
-          babyProfiles: db.command.push(invitation.babyId),
-          updateTime: db.serverDate()
-        }
-      })
-    }
+      if (!memberExists) {
+        await transaction.collection('baby_profiles').doc(invitation.babyId).update({
+          data: {
+            members: nextMembers,
+            updateTime: db.serverDate()
+          }
+        })
+      }
 
-    await db.collection('invitations').doc(invitation._id).update({
-      data: {
-        status: 'accepted',
-        acceptedBy: wxContext.OPENID,
-        acceptedTime: db.serverDate(),
-        updateTime: db.serverDate()
+      if (nextBabyProfiles.length !== babyProfiles.length) {
+        await transaction.collection('users').doc(user._id).update({
+          data: {
+            babyProfiles: nextBabyProfiles,
+            updateTime: db.serverDate()
+          }
+        })
+      }
+
+      return {
+        babyId: invitation.babyId,
+        babyName: invitation.babyName,
+        role: safeRole,
+        inviteCode: invitation.inviteCode || inviteCode
       }
     })
 
     return {
       code: 0,
       message: '已加入家庭',
-      data: {
-        babyId: invitation.babyId,
-        babyName: invitation.babyName,
-        role: invitation.role || 'member'
-      }
+      data: result
     }
   } catch (error) {
     return {

@@ -1,83 +1,75 @@
 <view class="page">
-  <view class="hero-card hero-card--family">
-    <view class="hero-topline">
-      <view class="chip">家庭成员</view>
-      <view class="hero-accent">FAMILY</view>
-    </view>
-    <view class="page-title mt-24">一起记录宝宝成长</view>
-    <view class="page-subtitle mt-16">创建者和管理员可以邀请家人加入，并控制成员角色。</view>
-  </view>
+  <ui-hero
+    extra-class="hero-card--family"
+    chip="家庭成员"
+    accent="FAMILY"
+    kicker="把成员列表和邀请动作放进同一条操作链路，降低协作设置成本。"
+    title="一起记录宝宝成长"
+    subtitle="创建者和管理员可以邀请家人加入，并控制成员角色与访问边界。"
+  ></ui-hero>
 
   <block wx:if="{{isLoading}}">
-    <view class="section-card mt-24 status-card">
-      <view class="loading-dots">
-        <view class="loading-dots__item"></view>
-        <view class="loading-dots__item"></view>
-        <view class="loading-dots__item"></view>
-      </view>
-      <view class="status-card__title">正在整理家庭成员</view>
-      <view class="status-card__desc">读取当前档案下的成员信息。</view>
-    </view>
+    <status-card extra-class="mt-24" loading="{{true}}" title="正在整理家庭成员" desc="读取当前档案下的成员信息。"></status-card>
   </block>
 
   <block wx:elif="{{loadError}}">
-    <view class="section-card mt-24 status-card">
-      <view class="status-card__title">家庭成员页暂时不可用</view>
-      <view class="status-card__desc">{{loadError}}</view>
+    <status-card extra-class="mt-24" title="家庭成员页暂时不可用" desc="{{loadError}}">
       <view class="status-card__actions">
         <button class="btn-secondary" bindtap="retryLoad">重新加载</button>
       </view>
-    </view>
+    </status-card>
   </block>
 
   <block wx:elif="{{!currentBaby}}">
-    <view class="section-card mt-24 empty-state onboarding-card">
-      <view class="empty-state__title">先创建一个宝宝档案</view>
-      <view class="empty-state__desc">家庭成员邀请依赖当前档案，建档后再邀请家人加入。</view>
-    </view>
+    <empty-state-panel extra-class="mt-24" icon-name="badge-plus" title="先创建一个宝宝档案" desc="家庭成员邀请依赖当前档案，建档后再邀请家人加入。">
+      <view class="status-inline">先建档，再开始协作</view>
+    </empty-state-panel>
   </block>
 
   <block wx:else>
     <view class="section-card mt-24 family-card">
-      <view class="section-header">
-        <view>
-          <view class="section-title">成员列表</view>
-          <view class="section-caption mt-16">{{members.length}} 位成员可访问当前档案</view>
-        </view>
-        <view class="chip">{{currentBaby.name}}</view>
-      </view>
+      <section-header title="成员列表" caption="{{memberCaption}}" chip="{{currentBaby.name}}"></section-header>
+      <view class="info-band mt-24">{{shareTip}}</view>
       <view class="member-list mt-24">
         <view class="member-item" wx:for="{{members}}" wx:key="userId">
           <view class="member-item__main">
             <view class="member-item__title">{{item.relationship || item.userId}}</view>
-            <view class="section-caption mt-16">角色：{{item.role}} {{item.isSelf ? '· 我自己' : ''}}</view>
+            <view class="section-caption mt-16">角色：{{item.roleLabel || item.role}} {{item.isSelf ? '· 我自己' : ''}}</view>
           </view>
-          <button wx:if="{{item.canRemove}}" class="btn-danger member-item__button" data-user-id="{{item.userId}}" bindtap="removeMember">移除</button>
+          <view class="member-item__side">
+            <view class="pill member-item__role">{{item.roleLabel || item.role}}</view>
+            <button wx:if="{{item.canRemove}}" class="btn-danger member-item__button mt-16" data-user-id="{{item.userId}}" bindtap="removeMember">移除</button>
+          </view>
         </view>
       </view>
     </view>
 
     <view wx:if="{{canManage}}" class="section-card mt-24 family-card">
-      <view class="section-header">
-        <view>
-          <view class="section-title">邀请新成员</view>
-          <view class="section-caption mt-16">先生成邀请，再通过微信转发</view>
-        </view>
-        <view class="chip">Invite</view>
-      </view>
-      <view class="field-group mt-24 mb-24">
-        <text class="field-label">默认角色</text>
+      <section-header title="邀请新成员" caption="生成一次性邀请码，再通过微信转发" chip="Invite"></section-header>
+      <form-field icon-name="shield-check" label="默认角色" extra-class="mt-24 mb-24">
         <picker mode="selector" range="{{roleOptions}}" range-key="label" value="{{roleValue}}" bindchange="onRoleChange">
           <view class="picker-field">{{roleOptions[roleValue].label}}</view>
         </picker>
-      </view>
-      <view class="field-group mb-24">
-        <text class="field-label">关系备注</text>
+      </form-field>
+      <form-field icon-name="user-round-check" label="关系备注" extra-class="mb-24">
         <input class="text-input" placeholder="例如：爷爷、奶奶、姨妈" maxlength="20" value="{{relationship}}" bindinput="onRelationshipInput" />
+      </form-field>
+      <view class="quick-actions">
+        <button class="btn-primary quick-actions__item" bindtap="createInvite">生成邀请码链接</button>
+        <button wx:if="{{latestInvite}}" class="btn-secondary quick-actions__item" open-type="share">微信转发邀请</button>
       </view>
-      <button class="btn-primary" bindtap="createInvite">生成邀请链接</button>
-      <button wx:if="{{latestInvite}}" class="btn-secondary mt-24" open-type="share">微信转发邀请</button>
-      <view wx:if="{{latestInvite}}" class="section-caption mt-16">最近邀请已复制到剪贴板，也可以直接点击微信转发。</view>
+      <view wx:if="{{latestInvite}}" class="invite-summary mt-24">
+        <view class="summary-tile invite-summary__tile">
+          <view class="summary-value">{{latestInvite.inviteCode}}</view>
+          <view class="summary-label">本次邀请码</view>
+        </view>
+        <view class="section-caption mt-16">该邀请码仅可使用一次，链接转发后若已被使用，其它人将无法继续加入。</view>
+      </view>
+    </view>
+
+    <view wx:else class="section-card mt-24 family-card family-card--readonly">
+      <section-header title="分享权限说明" caption="家庭分享和成员管理只向创建者、管理员开放" chip="Readonly"></section-header>
+      <view class="info-band mt-24">你当前可以浏览成员结构，但不能生成邀请链接，也不能移除成员。</view>
     </view>
   </block>
 </view>
